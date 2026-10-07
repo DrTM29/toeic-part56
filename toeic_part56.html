@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOEIC Part 5 &amp; 6 Practice</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=DM+Mono:wght@400;500&display=swap');
+:root {
+  --bg:#f0f4f8;--bg2:#e2eaf4;--surface:#fff;--surface2:#f4f7fb;
+  --border:#cdd8e8;--text:#1e293b;--text2:#475569;--text3:#94a3b8;
+  --green:#059669;--green-light:#ecfdf5;--red:#dc2626;--red-light:#fef2f2;
+  --gold:#d97706;--gold-light:#fef3c7;
+  --highlight:#fde68a;--highlight-correct:#bbf7d0;
+  /* Part 5 — オレンジ */
+  --p5:#ea580c;--p5-2:#c2410c;--p5-light:#fff7ed;--p5-border:#fed7aa;
+  /* Part 6 — ティール */
+  --p6:#0891b2;--p6-2:#0e7490;--p6-light:#ecfeff;--p6-border:#a5f3fc;
+  --radius:12px;--shadow:0 2px 12px rgba(30,41,59,.08);--shadow-lg:0 8px 32px rgba(30,41,59,.13);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.7;}
+.screen{display:none;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* ══ HOME ══ */
+#homeScreen{min-height:100vh;align-items:center;padding:40px 20px 80px;}
+.home-header{text-align:center;margin-bottom:32px;}
+.badge{display:inline-block;color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;padding:4px 14px;border-radius:20px;margin-bottom:12px;text-transform:uppercase;background:linear-gradient(90deg,var(--p5),var(--p6));}
+.home-header h1{font-family:'Merriweather',serif;font-size:clamp(22px,4vw,38px);font-weight:700;line-height:1.3;margin-bottom:6px;}
+.home-header p{color:var(--text2);font-size:14px;}
+
+/* Pace toggle */
+.pace-wrap{display:flex;align-items:center;gap:12px;margin-bottom:28px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 18px;box-shadow:var(--shadow);max-width:700px;width:100%;}
+.pace-label{font-size:12px;font-weight:700;color:var(--text2);white-space:nowrap;}
+.pace-toggle{display:flex;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+.pace-btn{padding:8px 16px;border:none;background:var(--surface2);font-size:13px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all .2s;color:var(--text2);}
+.pace-btn:first-child{border-right:1px solid var(--border);}
+.pace-btn.calm{background:#eff6ff;color:#2563eb;}
+.pace-btn.intense{background:#fff1f2;color:#dc2626;}
+.pace-desc{font-size:11px;color:var(--text3);flex:1;line-height:1.5;}
+
+/* Mode cards */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:700px;width:100%;margin-bottom:28px;}
+@media(max-width:500px){.mode-grid{grid-template-columns:1fr;}}
+.mode-card{background:var(--surface);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border:2px solid var(--border);cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative;overflow:hidden;text-align:left;}
+.mode-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;}
+.mode-card.p5::before{background:var(--p5);}
+.mode-card.p6::before{background:var(--p6);}
+.mode-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.mode-card.p5:hover{border-color:var(--p5);}
+.mode-card.p6:hover{border-color:var(--p6);}
+.mc-icon{font-size:30px;margin-bottom:10px;}
+.mc-title{font-size:16px;font-weight:700;margin-bottom:4px;}
+.mc-desc{font-size:12px;color:var(--text2);margin-bottom:8px;}
+.mc-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 10px;border-radius:10px;}
+.mc-badge.p5{background:var(--p5-light);color:var(--p5);}
+.mc-badge.p6{background:var(--p6-light);color:var(--p6);}
+.mc-time{font-size:11px;color:var(--text3);margin-top:4px;}
+
+/* Info cards */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;max-width:700px;width:100%;margin-bottom:28px;}
+.info-card{background:var(--surface);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border:1px solid var(--border);}
+.info-card .ic-icon{font-size:22px;margin-bottom:8px;}
+.info-card h3{font-size:13px;font-weight:700;margin-bottom:3px;}
+.info-card p{font-size:11px;color:var(--text2);}
+
+/* Records */
+.rec-section{max-width:700px;width:100%;}
+.rec-section h2{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.rec-wrap{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;}
+.rec-table{width:100%;border-collapse:collapse;font-size:12px;}
+.rec-table th{background:var(--surface2);padding:9px 12px;text-align:left;font-weight:700;color:var(--text2);border-bottom:1px solid var(--border);}
+.rec-table td{padding:8px 12px;border-bottom:1px solid var(--border);}
+.rec-table tr:last-child td{border-bottom:none;}
+.rec-table tr:hover td{background:var(--surface2);}
+.empty-rec{text-align:center;padding:32px;color:var(--text3);font-size:13px;}
+.score-pill{display:inline-block;padding:2px 9px;border-radius:20px;font-weight:700;font-size:11px;}
+.score-pill.high{background:var(--green-light);color:var(--green);}
+.score-pill.mid{background:var(--gold-light);color:var(--gold);}
+.score-pill.low{background:var(--red-light);color:var(--red);}
+.clear-btn{margin-top:10px;padding:6px 14px;border-radius:8px;border:1px solid var(--red);background:transparent;color:var(--red);font-size:11px;font-weight:600;font-family:'Noto Sans JP',sans-serif;cursor:pointer;}
+
+/* ══ TOPBAR (共通) ══ */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 14px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:10px;flex-shrink:0;}
+.tb-left{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+.tb-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.tb-btn{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:5px 9px;font-size:11px;font-weight:600;font-family:'Noto Sans JP',sans-serif;cursor:pointer;color:var(--text2);transition:all .15s;white-space:nowrap;}
+.tb-btn:hover{background:var(--p5-light);color:var(--p5);border-color:var(--p5);}
+.tb-btn.p6:hover{background:var(--p6-light);color:var(--p6);border-color:var(--p6);}
+.tb-btn.save{color:var(--green);border-color:var(--green);background:var(--green-light);}
+.tb-btn.save:hover{background:var(--green);color:#fff;}
+.q-num{font-size:12px;font-weight:700;white-space:nowrap;}
+.q-num.p5{color:var(--p5);}
+.q-num.p6{color:var(--p6);}
+.prog-wrap{flex:1;height:5px;background:var(--bg2);border-radius:3px;overflow:hidden;min-width:40px;max-width:140px;}
+.prog-fill{height:100%;border-radius:3px;transition:width .4s;}
+.prog-fill.p5{background:var(--p5);}
+.prog-fill.p6{background:var(--p6);}
+.timer{display:flex;align-items:center;font-family:'DM Mono',monospace;font-size:14px;font-weight:500;background:var(--surface2);padding:4px 10px;border-radius:8px;border:1px solid var(--border);min-width:64px;justify-content:center;}
+.timer.warning{color:var(--red);border-color:var(--red);background:var(--red-light);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.pace-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;white-space:nowrap;}
+.pace-badge.calm{background:#eff6ff;color:#2563eb;}
+.pace-badge.intense{background:#fff1f2;color:#dc2626;}
+.cat-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap;}
+.cat-badge.grammar{background:#f3e8ff;color:#7c3aed;}
+.cat-badge.vocab{background:var(--gold-light);color:var(--gold);}
+.cat-badge.pos{background:var(--p5-light);color:var(--p5);}
+
+/* ══ PART 5 QUIZ ══ */
+#p5Screen{min-height:100vh;}
+.p5-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 16px 60px;max-width:760px;width:100%;margin:0 auto;gap:16px;}
+.p5-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:2px solid var(--border);width:100%;overflow:hidden;}
+.p5-card-header{padding:10px 18px;background:var(--p5-light);border-bottom:1px solid var(--p5-border);display:flex;align-items:center;justify-content:space-between;}
+.p5-card-header h3{font-size:11px;font-weight:700;color:var(--p5);text-transform:uppercase;letter-spacing:1px;}
+.p5-sentence{padding:22px 24px;font-family:'Merriweather',serif;font-size:17px;line-height:2;color:var(--text);}
+.p5-blank{display:inline-block;min-width:120px;border-bottom:2.5px solid var(--p5);color:var(--p5);font-weight:700;text-align:center;padding:0 8px;font-style:normal;}
+.p5-choices{padding:0 16px 18px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:480px){.p5-choices{grid-template-columns:1fr;}}
+.p5-choice{display:flex;align-items:center;gap:9px;padding:10px 13px;border-radius:8px;border:2px solid var(--border);background:var(--surface);cursor:pointer;font-size:13px;font-family:'Noto Sans JP',sans-serif;text-align:left;transition:all .15s;color:var(--text);}
+.p5-choice:hover{border-color:var(--p5);background:var(--p5-light);}
+.p5-choice.sel{border-color:var(--p5);background:var(--p5-light);}
+.p5-choice.correct{border-color:var(--green);background:var(--green-light);}
+.p5-choice.incorrect{border-color:var(--red);background:var(--red-light);}
+.p5-choice:disabled{cursor:default;}
+.p5-clabel{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text2);}
+.p5-choice.sel .p5-clabel{background:var(--p5);color:#fff;}
+.p5-choice.correct .p5-clabel{background:var(--green);color:#fff;}
+.p5-choice.incorrect .p5-clabel{background:var(--red);color:#fff;}
+.p5-actions{padding:0 16px 16px;display:flex;gap:8px;}
+.p5-submit{flex:1;padding:12px;border-radius:9px;border:none;background:var(--p5);color:#fff;font-size:13px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:background .15s;}
+.p5-submit:hover{background:var(--p5-2);}
+.p5-submit:disabled{background:var(--text3);cursor:not-allowed;}
+.timeout-banner{background:var(--red-light);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;margin:0 16px 8px;display:none;}
+.timeout-banner.show{display:block;}
+
+/* ══ EXPLAIN (共通) ══ */
+#p5Explain,#p6Explain{min-height:100vh;overflow-y:auto;}
+.exp-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-shrink:0;}
+.exp-topbar h2{font-size:13px;font-weight:700;}
+.exp-body{max-width:820px;width:100%;margin:0 auto;padding:24px 16px 100px;display:flex;flex-direction:column;gap:18px;}
+.result-banner{border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.result-banner.correct{background:var(--green-light);border:2px solid var(--green);}
+.result-banner.incorrect{background:var(--red-light);border:2px solid var(--red);}
+.result-banner .rb-icon{font-size:24px;}
+.result-banner h3{font-size:15px;font-weight:700;}
+.result-banner p{font-size:12px;color:var(--text2);}
+.exp-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;}
+.exp-card-hdr{background:var(--surface2);padding:10px 16px;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;}
+.exp-card-body{padding:16px 20px;font-size:13px;line-height:1.85;}
+.sentence-replay{font-family:'Merriweather',serif;font-size:14px;line-height:2.1;padding:14px 18px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);margin-bottom:8px;}
+.answer-highlight{background:var(--highlight-correct);border-radius:3px;padding:1px 4px;font-weight:700;}
+.point-box{background:var(--p5-light);border-left:3px solid var(--p5);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;margin-bottom:10px;line-height:1.8;}
+.point-box.p6{background:var(--p6-light);border-color:var(--p6);}
+.syntax-title{font-weight:700;font-size:12px;color:var(--p5);margin-bottom:4px;margin-top:12px;}
+.syntax-title.p6{color:var(--p6);}
+.syntax-note{background:var(--p5-light);border-radius:8px;padding:10px 13px;font-size:12px;line-height:1.8;}
+.syntax-note.p6{background:var(--p6-light);}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:7px;margin-top:7px;}
+.vocab-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 11px;}
+.vocab-item .word{font-weight:700;font-size:12px;color:var(--p5);}
+.vocab-item .word.p6{color:var(--p6);}
+.vocab-item .meaning{font-size:11px;color:var(--text2);margin-top:2px;}
+.next-btn{align-self:center;width:100%;max-width:380px;padding:14px;border-radius:11px;border:none;color:#fff;font-size:14px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.next-btn.p5{background:var(--p5);}
+.next-btn.p5:hover{background:var(--p5-2);}
+.next-btn.p6{background:var(--p6);}
+.next-btn.p6:hover{background:var(--p6-2);}
+
+/* ══ RESULTS (共通) ══ */
+#p5Results,#p6Results{min-height:100vh;align-items:center;justify-content:center;padding:40px 20px;}
+.res-card{background:var(--surface);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--border);padding:32px;max-width:480px;width:100%;text-align:center;margin-bottom:16px;}
+.score-ring{width:100px;height:100px;margin:0 auto 18px;position:relative;}
+.score-ring svg{width:100%;height:100%;}
+.score-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:22px;font-weight:700;}
+.res-card h2{font-size:20px;font-weight:700;margin-bottom:5px;}
+.res-card>p{color:var(--text2);margin-bottom:18px;font-size:13px;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px;}
+.stat-box{background:var(--surface2);border-radius:10px;padding:11px;border:1px solid var(--border);}
+.stat-box .sv{font-size:20px;font-weight:700;}
+.stat-box .sl{font-size:11px;color:var(--text3);margin-top:2px;}
+.stat-box.correct .sv{color:var(--green);}
+.stat-box.wrong .sv{color:var(--red);}
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;}
+.outline-btn{padding:10px 20px;border-radius:10px;border:2px solid var(--border);background:transparent;color:var(--text);font-size:12px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all .15s;}
+.outline-btn:hover{background:var(--surface2);}
+
+/* ══ PART 6 QUIZ ══ */
+#p6Screen{min-height:100vh;}
+.p6-body{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1160px;width:100%;margin:0 auto;padding:18px 14px 60px;}
+@media(max-width:740px){.p6-body{grid-template-columns:1fr;}}
+.p6-passage-panel{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;max-height:calc(100vh - 80px);}
+.p6-panel-hdr{padding:10px 16px;background:var(--p6-light);border-bottom:1px solid var(--p6-border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.p6-panel-hdr h3{font-size:11px;font-weight:700;color:var(--p6);text-transform:uppercase;letter-spacing:1px;}
+.p6-passage-body{padding:16px 20px;overflow-y:auto;flex:1;font-family:'Merriweather',serif;font-size:14px;line-height:2.1;color:var(--text);}
+.p6-passage-title{font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:700;margin-bottom:10px;}
+.p6-blank-marker{display:inline-block;background:var(--p6-light);border:2px solid var(--p6);border-radius:6px;padding:0 8px;font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--p6);cursor:pointer;transition:background .15s;margin:0 2px;}
+.p6-blank-marker.active{background:var(--p6);color:#fff;}
+.p6-blank-marker.answered{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.p6-blank-marker.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.p6-blank-marker.incorrect{background:var(--red-light);border-color:var(--red);color:var(--red);}
+.p6-trans-box{display:none;padding:12px 18px;background:#fffbeb;border-top:1px solid #fde68a;font-size:12px;line-height:1.8;color:#78350f;font-style:italic;flex-shrink:0;}
+.p6-trans-box.visible{display:block;}
+.p6-trans-box strong{display:block;font-size:10px;font-style:normal;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:4px;}
+.p6-q-panel{display:flex;flex-direction:column;gap:12px;overflow-y:auto;max-height:calc(100vh - 80px);padding-bottom:4px;}
+.p6-qcard{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:2px solid var(--border);overflow:hidden;transition:border-color .2s;}
+.p6-qcard.active-q{border-color:var(--p6);}
+.p6-qcard-hdr{background:var(--surface2);padding:8px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.p6-qnum{font-size:11px;font-weight:700;color:var(--p6);}
+.p6-ans-mark{font-size:11px;font-weight:600;display:none;}
+.p6-qcard-body{padding:12px 14px;}
+.p6-qtext{font-size:13px;font-weight:500;margin-bottom:10px;line-height:1.6;}
+.p6-choices{display:flex;flex-direction:column;gap:6px;}
+.p6-choice{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-radius:7px;border:2px solid var(--border);background:var(--surface);cursor:pointer;font-size:12px;font-family:'Noto Sans JP',sans-serif;text-align:left;color:var(--text);line-height:1.5;width:100%;transition:border-color .15s,background .15s;}
+.p6-choice:hover{border-color:var(--p6);background:var(--p6-light);}
+.p6-choice.sel{border-color:var(--p6);background:var(--p6-light);}
+.p6-choice.ok{border-color:var(--green)!important;background:var(--green-light)!important;}
+.p6-choice.ng{border-color:var(--red)!important;background:var(--red-light)!important;}
+.p6-choice:disabled{cursor:default;}
+.p6-clabel{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text2);}
+.p6-choice.sel .p6-clabel{background:var(--p6);color:#fff;}
+.p6-choice.ok .p6-clabel{background:var(--green)!important;color:#fff!important;}
+.p6-choice.ng .p6-clabel{background:var(--red)!important;color:#fff!important;}
+.p6-timeout-banner{background:var(--red-light);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;display:none;margin:0 0 8px;}
+.p6-timeout-banner.show{display:block;}
+.p6-submit-btn{padding:13px;border-radius:9px;border:none;background:var(--p6);color:#fff;font-size:13px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;width:100%;transition:background .15s;margin-top:4px;}
+.p6-submit-btn:hover{background:var(--p6-2);}
+.p6-submit-btn:disabled{background:var(--text3);cursor:not-allowed;}
+.p6-trans-btn{padding:9px 14px;border-radius:9px;border:1px solid #fde68a;background:var(--gold-light);color:var(--gold);font-size:12px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;width:100%;}
+.p6-trans-btn:hover{background:#fde68a;}
+
+/* P6 Explain */
+.p6-set-hdr{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);border-left:4px solid var(--p6);padding:14px 18px;}
+.p6-set-hdr h3{font-size:13px;font-weight:700;color:var(--p6);margin-bottom:3px;}
+.p6-set-hdr p{font-size:12px;color:var(--text2);}
+.p6-score-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.p6-passage-replay{font-family:'Merriweather',serif;font-size:13px;line-height:2.1;color:var(--text);padding:14px 18px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);margin-bottom:4px;}
+.p6-passage-replay .rp-title{font-family:'Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;}
+.p6-ans-hl{background:var(--highlight-correct);border-radius:3px;padding:1px 4px;font-weight:700;}
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#1e293b;color:#fff;padding:10px 20px;border-radius:10px;font-size:12px;font-weight:500;z-index:9999;transition:transform .3s;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- ══ HOME ══ -->
+<div id="homeScreen" class="screen active">
+  <div class="home-header">
+    <div class="badge">TOEIC Practice</div>
+    <h1>TOEIC Part 5 &amp; 6<br>文法・語彙・読解</h1>
+    <p>空欄を埋めて正確さとスピードを鍛えましょう。</p>
+  </div>
+
+  <div class="pace-wrap">
+    <span class="pace-label">⏱ 制限時間</span>
+    <div class="pace-toggle">
+      <button class="pace-btn calm" id="paceBtnCalm" onclick="setPace('calm')">🌿 ゆったり</button>
+      <button class="pace-btn" id="paceBtnIntense" onclick="setPace('intense')">🔥 本気</button>
+    </div>
+    <div class="pace-desc" id="paceDesc">Part 5：20秒／問　Part 6：30秒／問。じっくり考える練習に。</div>
+  </div>
+
+  <div class="mode-grid">
+    <div class="mode-card p5" onclick="startP5()">
+      <div class="mc-icon">✏️</div>
+      <div class="mc-title">Part 5</div>
+      <div class="mc-desc">短文穴埋め。品詞・語彙・文法の基礎を固める100問。</div>
+      <div class="mc-badge p5">100問・ランダム</div>
+      <div class="mc-time" id="p5TimeLabel">⏱ ゆったり 20秒／問</div>
+    </div>
+    <div class="mode-card p6" onclick="startP6()">
+      <div class="mc-icon">📝</div>
+      <div class="mc-title">Part 6</div>
+      <div class="mc-desc">長文穴埋め。文脈を読みながら4つの空欄を埋める16セット。</div>
+      <div class="mc-badge p6">16セット・ランダム</div>
+      <div class="mc-time" id="p6TimeLabel">⏱ ゆったり 30秒／問</div>
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="ic-icon">🧩</div>
+      <h3>品詞識別</h3>
+      <p>名詞・動詞・形容詞・副詞の見分け方を解説付きで練習。</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon">📖</div>
+      <h3>語彙力強化</h3>
+      <p>ビジネス頻出語彙を文脈の中で習得。</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon">⚙️</div>
+      <h3>文法・語法</h3>
+      <p>動詞の形・前置詞・接続詞など頻出文法を網羅。</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon">📊</div>
+      <h3>学習記録</h3>
+      <p>挑戦回数・スコア・正解率を自動保存。</p>
+    </div>
+  </div>
+
+  <div class="rec-section">
+    <h2>📋 学習記録</h2>
+    <div class="rec-wrap" id="recWrap"><div class="empty-rec">まだ記録がありません。練習を開始しましょう！</div></div>
+    <div style="text-align:right;margin-top:8px;">
+      <button class="clear-btn" onclick="clearRecords()">🗑️ 記録をすべて削除</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PART 5 QUIZ ══ -->
+<div id="p5Screen" class="screen">
+  <div class="topbar">
+    <div class="tb-left">
+      <button class="tb-btn" onclick="goHome()">🏠 Home</button>
+      <span class="q-num p5" id="p5QNum">Q1/100</span>
+      <div class="prog-wrap"><div class="prog-fill p5" id="p5Prog" style="width:1%"></div></div>
+    </div>
+    <div class="tb-right">
+      <span class="cat-badge" id="p5CatBadge">品詞</span>
+      <span class="pace-badge calm" id="p5PaceBadge">🌿 ゆったり</span>
+      <div class="timer" id="p5Timer">⏱ --</div>
+      <button class="tb-btn save" onclick="saveP5Progress()">💾 保存</button>
+    </div>
+  </div>
+  <div class="p5-body">
+    <div class="p5-card" id="p5Card">
+      <div class="p5-card-header">
+        <h3>Part 5 — Short-Answer</h3>
+        <span id="p5TypeLabel" style="font-size:11px;color:var(--p5);font-weight:600;"></span>
+      </div>
+      <div class="p5-sentence" id="p5Sentence"></div>
+      <div class="timeout-banner" id="p5TimeoutBanner">⏰ 時間切れ！正解を確認してください。</div>
+      <div class="p5-choices" id="p5Choices"></div>
+      <div class="p5-actions">
+        <button class="p5-submit" id="p5SubmitBtn" onclick="submitP5()" disabled>回答する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PART 5 EXPLAIN ══ -->
+<div id="p5Explain" class="screen">
+  <div class="exp-topbar">
+    <h2 id="p5ExpTitle">解説</h2>
+    <div style="display:flex;gap:7px;">
+      <button class="tb-btn" onclick="goHome()">🏠 Home</button>
+      <button class="tb-btn save" onclick="saveP5Progress()">💾 保存</button>
+    </div>
+  </div>
+  <div class="exp-body" id="p5ExpBody"></div>
+</div>
+
+<!-- ══ PART 5 RESULTS ══ -->
+<div id="p5Results" class="screen">
+  <div class="res-card">
+    <div class="score-ring">
+      <svg viewBox="0 0 110 110">
+        <circle cx="55" cy="55" r="48" fill="none" stroke="#e2e8f0" stroke-width="11"/>
+        <circle cx="55" cy="55" r="48" fill="none" stroke="var(--p5)" stroke-width="11"
+          stroke-dasharray="301.6" id="p5Arc" stroke-dashoffset="301.6"
+          stroke-linecap="round" transform="rotate(-90 55 55)"/>
+      </svg>
+      <div class="score-num" id="p5ScoreNum">0%</div>
+    </div>
+    <h2 id="p5ResTitle">お疲れさまでした！</h2>
+    <p id="p5ResSub"></p>
+    <div class="stats-row">
+      <div class="stat-box correct"><div class="sv" id="p5StCorrect">0</div><div class="sl">正解</div></div>
+      <div class="stat-box wrong"><div class="sv" id="p5StWrong">0</div><div class="sl">不正解</div></div>
+      <div class="stat-box"><div class="sv" id="p5StTotal">0</div><div class="sl">問題数</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="outline-btn" onclick="goHome()">🏠 Home</button>
+      <button class="next-btn p5" style="max-width:180px;padding:11px;" onclick="startP5()">🔀 もう一度</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PART 6 QUIZ ══ -->
+<div id="p6Screen" class="screen">
+  <div class="topbar">
+    <div class="tb-left">
+      <button class="tb-btn p6" onclick="goHome()">🏠 Home</button>
+      <span class="q-num p6" id="p6SetNum">セット 1/16</span>
+      <div class="prog-wrap"><div class="prog-fill p6" id="p6Prog" style="width:1%"></div></div>
+    </div>
+    <div class="tb-right">
+      <span class="pace-badge calm" id="p6PaceBadge">🌿 ゆったり</span>
+      <div class="timer" id="p6Timer">⏱ --</div>
+      <button class="tb-btn save" onclick="saveP6Progress()">💾 保存</button>
+    </div>
+  </div>
+  <div class="p6-body" id="p6Body"></div>
+</div>
+
+<!-- ══ PART 6 EXPLAIN ══ -->
+<div id="p6Explain" class="screen">
+  <div class="exp-topbar">
+    <h2 id="p6ExpTitle">解説</h2>
+    <div style="display:flex;gap:7px;">
+      <button class="tb-btn p6" onclick="goHome()">🏠 Home</button>
+      <button class="tb-btn save" onclick="saveP6Progress()">💾 保存</button>
+    </div>
+  </div>
+  <div class="exp-body" id="p6ExpBody"></div>
+</div>
+
+<!-- ══ PART 6 RESULTS ══ -->
+<div id="p6Results" class="screen">
+  <div class="res-card">
+    <div class="score-ring">
+      <svg viewBox="0 0 110 110">
+        <circle cx="55" cy="55" r="48" fill="none" stroke="#e2e8f0" stroke-width="11"/>
+        <circle cx="55" cy="55" r="48" fill="none" stroke="var(--p6)" stroke-width="11"
+          stroke-dasharray="301.6" id="p6Arc" stroke-dashoffset="301.6"
+          stroke-linecap="round" transform="rotate(-90 55 55)"/>
+      </svg>
+      <div class="score-num" id="p6ScoreNum">0%</div>
+    </div>
+    <h2 id="p6ResTitle">お疲れさまでした！</h2>
+    <p id="p6ResSub"></p>
+    <div class="stats-row">
+      <div class="stat-box correct"><div class="sv" id="p6StCorrect">0</div><div class="sl">正解</div></div>
+      <div class="stat-box wrong"><div class="sv" id="p6StWrong">0</div><div class="sl">不正解</div></div>
+      <div class="stat-box"><div class="sv" id="p6StTotal">0</div><div class="sl">問題数</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="outline-btn" onclick="goHome()">🏠 Home</button>
+      <button class="next-btn p6" style="max-width:180px;padding:11px;" onclick="startP6()">🔀 もう一度</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// PART 5 QUESTIONS — 100問
+// category: 'pos'=品詞, 'vocab'=語彙, 'grammar'=文法
+// sentence: _____ が空欄
+// ══════════════════════════════════════
+const P5Q = [
+// ── 品詞 (POS) ──
+{cat:'pos',type:'品詞識別',sentence:'The _____ of the new software exceeded all expectations.',choices:['perform','performance','performed','performing'],answer:1,explanation:'冠詞Theの後、前置詞ofの前なので名詞が必要。perform（動詞）→ performance（名詞）。',syntax:'the + 名詞 + of ～ という名詞句の骨格を見抜く。',vocab:[{word:'performance',meaning:'性能・業績'},{word:'exceed',meaning:'超える'},{word:'expectation',meaning:'期待'}]},
+{cat:'pos',type:'品詞識別',sentence:'The manager spoke _____ about the changes in company policy.',choices:['brief','briefing','briefly','briefed'],answer:2,explanation:'動詞spokeを修飾するのは副詞。brief（形容詞）→ briefly（副詞）。',syntax:'動詞 + 副詞（-ly）の語順。副詞は動詞・形容詞・他の副詞を修飾。',vocab:[{word:'briefly',meaning:'簡潔に'},{word:'policy',meaning:'方針・ポリシー'},{word:'brief',meaning:'短い・簡潔な'}]},
+{cat:'pos',type:'品詞識別',sentence:'We need a _____ review of all financial documents before the audit.',choices:['thorough','thoroughly','thoroughness','thoroughed'],answer:0,explanation:'名詞reviewの前に置ける品詞は形容詞。thoroughly（副詞）× → thorough（形容詞）◯。',syntax:'a + 形容詞 + 名詞 の名詞句構造。',vocab:[{word:'thorough',meaning:'徹底的な'},{word:'audit',meaning:'監査'},{word:'financial',meaning:'財務の'}]},
+{cat:'pos',type:'品詞識別',sentence:'The _____ of the project timeline will affect the entire team.',choices:['extend','extensive','extension','extensively'],answer:2,explanation:'冠詞Theと前置詞ofの間の空欄は名詞。extend（動詞）→ extension（名詞）。',syntax:'The + _____ + of ～ のパターンでは必ず名詞が入る。',vocab:[{word:'extension',meaning:'延長'},{word:'timeline',meaning:'タイムライン'},{word:'affect',meaning:'影響する'}]},
+{cat:'pos',type:'品詞識別',sentence:'Staff members are _____ required to attend the orientation session.',choices:['strong','strength','strengthen','strongly'],answer:3,explanation:'be動詞+過去分詞（required）を修飾するのは副詞。strong（形容詞）→ strongly（副詞）。',syntax:'be + 副詞 + 過去分詞 という受動態に副詞が挟まる形。',vocab:[{word:'strongly',meaning:'強く・非常に'},{word:'require',meaning:'義務付ける'},{word:'orientation',meaning:'オリエンテーション'}]},
+{cat:'pos',type:'品詞識別',sentence:'The new safety regulations were designed to _____ workplace accidents.',choices:['prevention','prevent','preventive','preventable'],answer:1,explanation:'to不定詞の直後なので動詞の原形。prevention（名詞）× → prevent（動詞の原形）◯。',syntax:'to + 動詞の原形（不定詞）。toの後は必ず動詞原形。',vocab:[{word:'prevent',meaning:'防ぐ'},{word:'regulation',meaning:'規制'},{word:'workplace',meaning:'職場'}]},
+{cat:'pos',type:'品詞識別',sentence:'The marketing team showed _____ improvement in quarterly sales figures.',choices:['remark','remarkable','remarkably','remarked'],answer:1,explanation:'名詞improvementの前の空欄は形容詞。remarkably（副詞）× → remarkable（形容詞）◯。',syntax:'形容詞 + 名詞 の修飾構造。-able, -ible, -ive などが形容詞の語尾。',vocab:[{word:'remarkable',meaning:'著しい・目覚ましい'},{word:'quarterly',meaning:'四半期の'},{word:'improvement',meaning:'改善'}]},
+{cat:'pos',type:'品詞識別',sentence:'Please submit your expense report to the accounting department for _____ .',choices:['approve','approval','approved','approving'],answer:1,explanation:'前置詞forの後の空欄は名詞。approve（動詞）→ approval（名詞）。',syntax:'for + 名詞（目的・理由）。前置詞の後は必ず名詞（句）。',vocab:[{word:'approval',meaning:'承認'},{word:'expense report',meaning:'経費報告書'},{word:'submit',meaning:'提出する'}]},
+{cat:'pos',type:'品詞識別',sentence:'The _____ in production costs has allowed us to lower our prices.',choices:['reduce','reduction','reduced','reductive'],answer:1,explanation:'冠詞Theの後、前置詞inの前→名詞。reduce（動詞）→ reduction（名詞）。',syntax:'The + 名詞 + in ～ というパターン。-tion, -ment, -ness は名詞語尾。',vocab:[{word:'reduction',meaning:'削減'},{word:'production cost',meaning:'製造コスト'},{word:'allow',meaning:'可能にする'}]},
+{cat:'pos',type:'品詞識別',sentence:'Our customer service team responds _____ to all inquiries within 24 hours.',choices:['prompt','prompting','promptly','promptness'],answer:2,explanation:'動詞respondsを修飾→副詞。prompt（形容詞）→ promptly（副詞）。',syntax:'動詞 + 副詞（-ly）の語順。副詞は動詞の後か前に置く。',vocab:[{word:'promptly',meaning:'迅速に'},{word:'inquiry',meaning:'問い合わせ'},{word:'respond',meaning:'返答する'}]},
+// ── 語彙 (VOCAB) ──
+{cat:'vocab',type:'語彙',sentence:'The company decided to _____ its operations to three new countries next year.',choices:['reduce','expand','restrict','close'],answer:1,explanation:'「3カ国に展開する」という文脈→拡大するexpandが正解。reduce=削減、restrict=制限、close=閉鎖。',syntax:'expand operations = 事業を拡大する。よく使われるビジネス表現。',vocab:[{word:'expand',meaning:'拡大する'},{word:'operation',meaning:'事業・業務'},{word:'restrict',meaning:'制限する'}]},
+{cat:'vocab',type:'語彙',sentence:'All employees must _____ with the new data privacy regulations immediately.',choices:['perform','comply','submit','negotiate'],answer:1,explanation:'with以下の規制に従う→ comply with（遵守する）が正解。',syntax:'comply with ～ = ～を遵守する。must comply with = 必ず遵守しなければならない。',vocab:[{word:'comply',meaning:'遵守する'},{word:'regulation',meaning:'規制'},{word:'immediately',meaning:'直ちに'}]},
+{cat:'vocab',type:'語彙',sentence:'The proposal was _____ by the board of directors after a lengthy discussion.',choices:['approved','delayed','ignored','challenged'],answer:0,explanation:'取締役会での長い議論→最終的に承認されたapprovedが文脈に合う。',syntax:'be approved by ～ = ～によって承認される（受動態）。',vocab:[{word:'approve',meaning:'承認する'},{word:'board of directors',meaning:'取締役会'},{word:'lengthy',meaning:'長時間の'}]},
+{cat:'vocab',type:'語彙',sentence:'We need to _____ the project timeline because of unexpected delays.',choices:['revise','ignore','extend','duplicate'],answer:0,explanation:'予期せぬ遅延→タイムラインを見直す/修正するreviseが正解。extendは「延長」でニュアンスが異なる。',syntax:'revise = 修正する・改訂する。revision（名詞）と合わせて覚える。',vocab:[{word:'revise',meaning:'修正する・改訂する'},{word:'timeline',meaning:'スケジュール'},{word:'unexpected',meaning:'予期せぬ'}]},
+{cat:'vocab',type:'語彙',sentence:'The factory was temporarily closed for _____ maintenance last weekend.',choices:['routine','urgent','annual','previous'],answer:0,explanation:'「定期メンテナンス」→routine maintenance（定期点検）が正解。',syntax:'routine maintenance = 定期点検・日常的なメンテナンス。頻出コロケーション。',vocab:[{word:'routine',meaning:'定期的な・日常的な'},{word:'maintenance',meaning:'保守・メンテナンス'},{word:'temporarily',meaning:'一時的に'}]},
+{cat:'vocab',type:'語彙',sentence:'Please _____ your application no later than the end of the business day.',choices:['submit','receive','review','cancel'],answer:0,explanation:'「営業時間終了前までに」→提出するsubmitが正解。',syntax:'submit an application = 申請書を提出する。no later than = ～より遅くない（締め切り表現）。',vocab:[{word:'submit',meaning:'提出する'},{word:'application',meaning:'申請書・応募書類'},{word:'no later than',meaning:'～までに'}]},
+{cat:'vocab',type:'語彙',sentence:'The new CEO _____ a major restructuring of the company shortly after taking office.',choices:['announced','withdrew','opposed','delayed'],answer:0,explanation:'就任後に大規模再編を「発表した」→announcedが正解。',syntax:'announce ～ = ～を発表する。shortly after taking office = 就任直後。',vocab:[{word:'announce',meaning:'発表する'},{word:'restructuring',meaning:'組織再編'},{word:'shortly after',meaning:'～直後に'}]},
+{cat:'vocab',type:'語彙',sentence:'Customers who _____ before March 31 will receive a 15% early-bird discount.',choices:['register','request','cancel','complain'],answer:0,explanation:'「早期割引を受ける」→登録するregisterが正解。',syntax:'register = 登録する。early-bird discount = 早期申込割引。',vocab:[{word:'register',meaning:'登録する'},{word:'discount',meaning:'割引'},{word:'early-bird',meaning:'早期申込みの'}]},
+{cat:'vocab',type:'語彙',sentence:'The report _____ that customer satisfaction has increased significantly this year.',choices:['indicates','denies','ignores','predicts'],answer:0,explanation:'レポートが「示している」→indicatesが正解。predictは未来のことを予測する。',syntax:'indicate that ～ = ～ということを示す。データや報告書の主語として頻出。',vocab:[{word:'indicate',meaning:'示す'},{word:'satisfaction',meaning:'満足度'},{word:'significantly',meaning:'大幅に'}]},
+{cat:'vocab',type:'語彙',sentence:'The company plans to _____ its headquarters from New York to Austin.',choices:['relocate','renovate','replace','reduce'],answer:0,explanation:'「本社をニューヨークからオースティンへ」→移転するrelocateが正解。',syntax:'relocate ～ from A to B = AからBへ移転する。',vocab:[{word:'relocate',meaning:'移転する'},{word:'headquarters',meaning:'本社'},{word:'renovate',meaning:'改装する'}]},
+{cat:'vocab',type:'語彙',sentence:'The annual conference will _____ approximately 500 participants from around the world.',choices:['attract','require','prevent','reduce'],answer:0,explanation:'世界中から「集める・引きつける」→attractが正解。',syntax:'attract participants = 参加者を引きつける・集める。',vocab:[{word:'attract',meaning:'引きつける'},{word:'approximately',meaning:'約・おおよそ'},{word:'participant',meaning:'参加者'}]},
+{cat:'vocab',type:'語彙',sentence:'We strongly _____ all employees to complete the safety training by Friday.',choices:['encourage','force','prevent','allow'],answer:0,explanation:'「推奨する・促す」→encourageが正解。forceは強制的な意味で強すぎる。',syntax:'encourage A to do = Aが～するよう促す。ビジネス文書に頻出。',vocab:[{word:'encourage',meaning:'促す・奨励する'},{word:'complete',meaning:'完了する'},{word:'strongly',meaning:'強く'}]},
+{cat:'vocab',type:'語彙',sentence:'The terms of the contract must be _____ by both parties before it takes effect.',choices:['agreed','ignored','delayed','modified'],answer:0,explanation:'「発効前に双方が合意しなければならない」→agreed（合意された）が正解。',syntax:'be agreed by both parties = 双方によって合意される。take effect = 発効する。',vocab:[{word:'agree',meaning:'合意する'},{word:'terms',meaning:'条件・条項'},{word:'take effect',meaning:'発効する'}]},
+{cat:'vocab',type:'語彙',sentence:'Please _____ the attached document carefully before signing.',choices:['review','ignore','delete','forward'],answer:0,explanation:'「署名前に添付文書を」→注意深く確認するreviewが正解。',syntax:'review + 文書 = 書類を精査する・確認する。',vocab:[{word:'review',meaning:'確認する・検討する'},{word:'attached',meaning:'添付された'},{word:'carefully',meaning:'注意深く'}]},
+{cat:'vocab',type:'語彙',sentence:'The sales figures for Q3 _____ a 20% growth compared to the same period last year.',choices:['show','hide','reduce','ignore'],answer:0,explanation:'「Q3の売上データが示す」→showが正解。',syntax:'figures show ～ = 数字が～を示す。動詞showの目的語に数値・データが来るパターン。',vocab:[{word:'figure',meaning:'数字・データ'},{word:'growth',meaning:'成長・増加'},{word:'compared to',meaning:'～と比較して'}]},
+// ── 文法 (GRAMMAR) ──
+{cat:'grammar',type:'文法',sentence:'The meeting has been _____ until next Monday due to the holiday.',choices:['postpone','postponed','postponing','postpones'],answer:1,explanation:'has been + 過去分詞（受動態の現在完了）。postpone→postponed。',syntax:'have/has been + 過去分詞 = 現在完了受動態「～された（ことになっている）」。',vocab:[{word:'postpone',meaning:'延期する'},{word:'due to',meaning:'～のため'},{word:'postponed',meaning:'延期された'}]},
+{cat:'grammar',type:'文法',sentence:'Neither the manager nor the staff _____ aware of the schedule change.',choices:['was','were','is','are'],answer:1,explanation:'Neither A nor B の場合、動詞はBに一致。Bがstaff（複数）→ were。',syntax:'Neither A nor B + 動詞（B に一致）。Neither / nor の相関接続詞の文法。',vocab:[{word:'neither',meaning:'どちらも～ない'},{word:'aware',meaning:'気づいている'},{word:'schedule change',meaning:'スケジュール変更'}]},
+{cat:'grammar',type:'文法',sentence:'The new policy will take effect _____ all employees have been notified.',choices:['after','during','until','while'],answer:0,explanation:'「全従業員が通知された後に発効する」→after（～した後）が正解。',syntax:'take effect after ～ = ～の後に発効する。after + 完了形（have been notified）のパターン。',vocab:[{word:'take effect',meaning:'発効する'},{word:'notify',meaning:'通知する'},{word:'policy',meaning:'方針'}]},
+{cat:'grammar',type:'文法',sentence:'Ms. Kim is the most qualified candidate _____ has applied for the position.',choices:['who','which','what','where'],answer:0,explanation:'先行詞がthe most qualified candidate（人）→ 関係代名詞who。',syntax:'先行詞が人 → who / whom。先行詞がもの → which / that。',vocab:[{word:'qualified',meaning:'資格のある'},{word:'candidate',meaning:'候補者'},{word:'apply for',meaning:'応募する'}]},
+{cat:'grammar',type:'文法',sentence:'Please make sure that all files are saved _____ you close the application.',choices:['before','after','unless','since'],answer:0,explanation:'「アプリを閉じる前に保存」→before（～する前に）が正解。',syntax:'before + S + V = ～する前に。副詞節を導く接続詞として文中に置く。',vocab:[{word:'make sure',meaning:'確実にする'},{word:'application',meaning:'アプリケーション'},{word:'close',meaning:'閉じる'}]},
+{cat:'grammar',type:'文法',sentence:'The project was completed ahead of schedule, _____ impressed the client.',choices:['that','which','what','who'],answer:1,explanation:'コンマ＋関係代名詞は非制限用法→whichのみ可。',syntax:'カンマ + which = 非制限用法の関係代名詞。前の節全体を先行詞にとる。',vocab:[{word:'ahead of schedule',meaning:'予定より早く'},{word:'impress',meaning:'感動させる'},{word:'complete',meaning:'完了する'}]},
+{cat:'grammar',type:'文法',sentence:'_____ the heavy rain, the outdoor event was held as planned.',choices:['Despite','Because','Although','Since'],answer:0,explanation:'逆接で後半が予定通り開催→Despite（～にもかかわらず）。Despite + 名詞句。',syntax:'Despite + 名詞（句）。Although + S + V（接続詞）と異なり、前置詞なので名詞が続く。',vocab:[{word:'despite',meaning:'～にもかかわらず'},{word:'outdoor',meaning:'屋外の'},{word:'as planned',meaning:'予定通り'}]},
+{cat:'grammar',type:'文法',sentence:'If the shipment _____ by Friday, we will need to contact the supplier.',choices:["doesn't arrive","won't arrive","hadn't arrived","didn't arrive"],answer:0,explanation:'仮定法ではなく現実の条件文（直説法）→if節は現在形。If + 現在形 → will。',syntax:'If + 現在形, will + 動詞原形（一般条件文）。if節の中にwillは使わない。',vocab:[{word:'shipment',meaning:'出荷・荷物'},{word:'supplier',meaning:'供給業者'},{word:'contact',meaning:'連絡する'}]},
+{cat:'grammar',type:'文法',sentence:'The sales team _____ working on the proposal for the past three days.',choices:['has been','have been','had been','was'],answer:0,explanation:'The sales team は三人称単数→has been。「3日間ずっと」→現在完了進行形。',syntax:'have/has been + -ing = 現在完了進行形「ずっと～している」。',vocab:[{word:'proposal',meaning:'提案書'},{word:'sales team',meaning:'営業チーム'},{word:'work on',meaning:'～に取り組む'}]},
+{cat:'grammar',type:'文法',sentence:'Employees are encouraged to report any concerns _____ to their supervisors.',choices:['direct','directly','direction','directive'],answer:1,explanation:'動詞reportを修飾→副詞。direct（形容詞）→directly（副詞）。',syntax:'動詞 + 副詞（-ly）。directly = 直接に・すぐに。',vocab:[{word:'directly',meaning:'直接に'},{word:'supervisor',meaning:'上司'},{word:'concern',meaning:'懸念・問題'}]},
+{cat:'grammar',type:'文法',sentence:'By the time the new software is installed, the IT team _____ over 200 computers.',choices:['will have upgraded','will upgrade','has upgraded','upgraded'],answer:0,explanation:'By the time ～（～するまでには）→ 未来完了形 will have + 過去分詞。',syntax:'By the time + S + V（現在形）, S + will have + 過去分詞（未来完了）。',vocab:[{word:'install',meaning:'インストールする'},{word:'upgrade',meaning:'アップグレードする'},{word:'by the time',meaning:'～する頃には'}]},
+{cat:'grammar',type:'文法',sentence:'The results of the survey _____ that most employees prefer flexible working hours.',choices:['suggest','suggests','suggested','suggesting'],answer:0,explanation:'主語はThe results（複数）→ 動詞は複数形suggest。',syntax:'of ～ に惑わされず、真の主語（The results）を見つけて一致させる。',vocab:[{word:'survey',meaning:'調査・アンケート'},{word:'suggest',meaning:'示す・示唆する'},{word:'flexible',meaning:'柔軟な'}]},
+{cat:'grammar',type:'文法',sentence:'_____ completing the training course, employees will receive a certificate.',choices:['Upon','While','During','Since'],answer:0,explanation:'「研修修了後に」→Upon completing（～するとすぐに・～したら）。',syntax:'Upon + -ing = ～するとすぐに。Upon completion of ～ も同義。',vocab:[{word:'upon',meaning:'～するとすぐに'},{word:'certificate',meaning:'証明書'},{word:'complete',meaning:'修了する'}]},
+{cat:'grammar',type:'文法',sentence:'The conference room can _____ up to 30 people at one time.',choices:['accommodate','require','restrict','limit'],answer:0,explanation:'「最大30名を収容できる」→accommodateが正解。accommodate = 収容する。',syntax:'accommodate + 数字 = ～名を収容できる。',vocab:[{word:'accommodate',meaning:'収容する・対応する'},{word:'conference room',meaning:'会議室'},{word:'at one time',meaning:'同時に'}]},
+{cat:'grammar',type:'文法',sentence:'The manager asked that all reports _____ by Thursday morning.',choices:['be submitted','are submitted','will be submitted','were submitted'],answer:0,explanation:'ask that + S + 動詞原形（仮定法現在）。Sがthird personでも動詞は原形。',syntax:'ask / request / suggest / recommend that + S + 動詞原形（仮定法現在）。',vocab:[{word:'submit',meaning:'提出する'},{word:'request',meaning:'要請する'},{word:'by Thursday',meaning:'木曜日までに'}]},
+// ── 品詞 追加 ──
+{cat:'pos',type:'品詞識別',sentence:'The _____ displayed in the lobby won first prize at the art competition.',choices:['paint','painter','painting','painted'],answer:2,explanation:'定冠詞Theの後、displayed前の空欄は名詞。paint（動詞/名詞・絵の具）より painting（絵画）が適切。',syntax:'The + 名詞 + displayed in ～（過去分詞による後置修飾）。',vocab:[{word:'painting',meaning:'絵画'},{word:'display',meaning:'展示する'},{word:'competition',meaning:'コンテスト'}]},
+{cat:'pos',type:'品詞識別',sentence:'The new policy requires _____ approval from two senior managers.',choices:['write','written','writing','writes'],answer:1,explanation:'名詞approvalを修飾→形容詞として使える過去分詞written（書面による）。',syntax:'written approval = 書面による承認。過去分詞が形容詞として名詞を修飾。',vocab:[{word:'written',meaning:'書面による'},{word:'approval',meaning:'承認'},{word:'senior',meaning:'上級の'}]},
+{cat:'pos',type:'品詞識別',sentence:'The _____ of the new product launch has been set for next spring.',choices:['announce','announcement','announced','announcing'],answer:1,explanation:'Theの後→名詞。announce（動詞）→ announcement（名詞）。',syntax:'-ment は名詞語尾。announce → announcement（発表）。',vocab:[{word:'announcement',meaning:'発表・告知'},{word:'product launch',meaning:'製品発売'},{word:'set',meaning:'設定する'}]},
+{cat:'pos',type:'品詞識別',sentence:'The board approved the _____ to hire additional staff for the holiday season.',choices:['decide','decision','decisive','decisively'],answer:1,explanation:'冠詞theの後、to不定詞の前→名詞。decide（動詞）→ decision（名詞）。',syntax:'the decision to do = ～するという決定。decision + to不定詞のコロケーション。',vocab:[{word:'decision',meaning:'決定'},{word:'approve',meaning:'承認する'},{word:'additional',meaning:'追加の'}]},
+{cat:'pos',type:'品詞識別',sentence:'The conference was _____ attended by over 500 industry professionals.',choices:['heavy','heavier','heaviest','heavily'],answer:3,explanation:'be動詞+過去分詞（attended）を修飾→副詞。heavy→heavily。',syntax:'be + 副詞 + 過去分詞。heavily attended = 多数が出席した。',vocab:[{word:'heavily',meaning:'多大に・大勢が'},{word:'attend',meaning:'出席する'},{word:'professional',meaning:'専門家'}]},
+// ── 語彙 追加 ──
+{cat:'vocab',type:'語彙',sentence:'The company will _____ its annual report on the official website next week.',choices:['publish','collect','remove','delay'],answer:0,explanation:'「ウェブサイトに年次報告書を公開する」→publishが正解。',syntax:'publish a report = 報告書を公表する。',vocab:[{word:'publish',meaning:'公表する・発行する'},{word:'annual report',meaning:'年次報告書'},{word:'official',meaning:'公式の'}]},
+{cat:'vocab',type:'語彙',sentence:'The company _____ a new research facility in the city center last month.',choices:['opened','closed','moved','reduced'],answer:0,explanation:'「新しい研究施設を開設した」→openedが正解。',syntax:'open a facility = 施設を開設する。last month = 先月（過去形）。',vocab:[{word:'facility',meaning:'施設'},{word:'research',meaning:'研究'},{word:'city center',meaning:'市内中心部'}]},
+{cat:'vocab',type:'語彙',sentence:'All visitors must _____ at the security desk before entering the building.',choices:['check in','check out','log in','sign off'],answer:0,explanation:'「建物に入る前に受付でチェックインする」→check inが正解。',syntax:'check in at ～ = ～でチェックインする。',vocab:[{word:'check in',meaning:'チェックインする'},{word:'security desk',meaning:'警備受付'},{word:'visitor',meaning:'来訪者'}]},
+{cat:'vocab',type:'語彙',sentence:'The team leader was _____ for her outstanding contribution to the project.',choices:['recognized','criticized','replaced','dismissed'],answer:0,explanation:'「プロジェクトへの優れた貢献で称えられた」→recognizedが正解。',syntax:'be recognized for ～ = ～のことで認められる・称えられる。',vocab:[{word:'recognize',meaning:'認める・称える'},{word:'outstanding',meaning:'優れた・抜群の'},{word:'contribution',meaning:'貢献'}]},
+{cat:'vocab',type:'語彙',sentence:'The company _____ a new partnership with a leading technology firm.',choices:['established','cancelled','avoided','reduced'],answer:0,explanation:'「大手テクノロジー企業との新しいパートナーシップを締結した」→established。',syntax:'establish a partnership = パートナーシップを確立・締結する。',vocab:[{word:'establish',meaning:'確立する・設立する'},{word:'partnership',meaning:'パートナーシップ'},{word:'leading',meaning:'大手の・主要な'}]},
+// ── 文法 追加 ──
+{cat:'grammar',type:'文法',sentence:'The seminar will be held on Saturday _____ it rains heavily.',choices:['unless','if','while','since'],answer:0,explanation:'「大雨が降らない限り開催される」→unless（～でない限り）が正解。',syntax:'unless = if not。unless + S + V（肯定形）で「～でない限り」。',vocab:[{word:'unless',meaning:'～でない限り'},{word:'seminar',meaning:'セミナー'},{word:'heavily',meaning:'激しく'}]},
+{cat:'grammar',type:'文法',sentence:'_____ hard she works, she always finds time for her family.',choices:['However','Whatever','Whoever','Whenever'],answer:0,explanation:'「どんなに一生懸命働いても」→However + 形容詞/副詞＋S＋V。',syntax:'However + 形容詞/副詞 + S + V = どんなに～でも。',vocab:[{word:'however',meaning:'どんなに～でも'},{word:'find time',meaning:'時間を作る'},{word:'family',meaning:'家族'}]},
+{cat:'grammar',type:'文法',sentence:'The invoice must be paid within 30 days _____ receiving it.',choices:['of','after','since','before'],answer:0,explanation:'within 30 days of ～ = 「～から30日以内に」。',syntax:'within + 期間 + of + -ing = ～してから～以内に。',vocab:[{word:'invoice',meaning:'請求書'},{word:'within',meaning:'～以内に'},{word:'receive',meaning:'受け取る'}]},
+{cat:'grammar',type:'文法',sentence:'A copy of your passport _____ with the application form.',choices:['must be enclosed','must enclose','has enclosed','encloses'],answer:0,explanation:'「コピーを同封しなければならない」→受動態 must be enclosed が正解。',syntax:'must be + 過去分詞 = ～されなければならない（義務の受動態）。',vocab:[{word:'enclose',meaning:'同封する'},{word:'passport',meaning:'パスポート'},{word:'application form',meaning:'申請書'}]},
+{cat:'grammar',type:'文法',sentence:'The survey showed that _____ employees were satisfied with the new policy.',choices:['most of','most','almost','the most'],answer:1,explanation:'most + 名詞（no article）= ほとんどの〜。most of the employees とも言えるが、theなしではmostのみ。',syntax:'most + 名詞（無冠詞）= ほとんどの～。most of the + 名詞 との使い分けに注意。',vocab:[{word:'most',meaning:'ほとんどの'},{word:'satisfied',meaning:'満足している'},{word:'policy',meaning:'方針'}]},
+// さらに品詞・語彙・文法を追加して合計100問に
+{cat:'pos',type:'品詞識別',sentence:'The board made a _____ decision to postpone the product launch.',choices:['final','finally','finalize','finality'],answer:0,explanation:'名詞decisionを修飾→形容詞。finally（副詞）× → final（形容詞）◯。',syntax:'形容詞 + 名詞 の修飾構造。-al は形容詞語尾（final, annual, formalなど）。',vocab:[{word:'final',meaning:'最終的な'},{word:'postpone',meaning:'延期する'},{word:'decision',meaning:'決定'}]},
+{cat:'vocab',type:'語彙',sentence:'The manager _____ the new employee through the company procedures on her first day.',choices:['guided','forced','prevented','replaced'],answer:0,explanation:'「新入社員を手順に沿って案内した」→guidedが正解。',syntax:'guide A through B = AをBを通じて案内する・指導する。',vocab:[{word:'guide',meaning:'案内する・指導する'},{word:'procedure',meaning:'手順'},{word:'employee',meaning:'従業員'}]},
+{cat:'grammar',type:'文法',sentence:'Applicants _____ have more than five years of experience will be prioritized.',choices:['who','which','what','whose'],answer:0,explanation:'先行詞Applicants（人）→ 関係代名詞who。',syntax:'Applicants who ～ = ～である応募者。先行詞が人 → who。',vocab:[{word:'applicant',meaning:'応募者'},{word:'prioritize',meaning:'優先する'},{word:'experience',meaning:'経験'}]},
+{cat:'pos',type:'品詞識別',sentence:'The company is committed to _____ sustainable business practices.',choices:['promote','promotion','promoted','promoting'],answer:3,explanation:'be committed to の後は名詞か動名詞（-ing）。promoting（動名詞）が正解。',syntax:'be committed to + 名詞 / 動名詞（-ing）。toは前置詞なので動詞原形は不可。',vocab:[{word:'committed',meaning:'コミットしている'},{word:'sustainable',meaning:'持続可能な'},{word:'promote',meaning:'推進する'}]},
+{cat:'vocab',type:'語彙',sentence:'The HR department will _____ a comprehensive benefits package for all new hires.',choices:['provide','remove','ignore','evaluate'],answer:0,explanation:'「新入社員に包括的な福利厚生を提供する」→provideが正解。',syntax:'provide A for/to B = BにAを提供する。',vocab:[{word:'provide',meaning:'提供する'},{word:'comprehensive',meaning:'包括的な'},{word:'benefits package',meaning:'福利厚生パッケージ'}]},
+{cat:'grammar',type:'文法',sentence:'The new equipment was far _____ efficient than the old model.',choices:['more','most','very','too'],answer:0,explanation:'far + 比較級で強調。far more efficient = はるかに効率的。',syntax:'far / much / even + 比較級 で比較を強調する。',vocab:[{word:'efficient',meaning:'効率的な'},{word:'equipment',meaning:'設備・機器'},{word:'far',meaning:'はるかに'}]},
+{cat:'pos',type:'品詞識別',sentence:'The firm showed great _____ in completing the project ahead of schedule.',choices:['efficient','efficiently','efficiency','efficiencies'],answer:2,explanation:'great（形容詞）の後→名詞。efficiency（名詞）が正解。',syntax:'great + 名詞（抽象名詞）。show efficiency = 効率性を見せる。',vocab:[{word:'efficiency',meaning:'効率性'},{word:'ahead of schedule',meaning:'予定より早く'},{word:'firm',meaning:'会社'}]},
+{cat:'vocab',type:'語彙',sentence:'Customers can _____ a full refund within 30 days of purchase.',choices:['request','ignore','avoid','cancel'],answer:0,explanation:'「購入後30日以内に返金を要求できる」→requestが正解。',syntax:'request a refund = 返金を要求する。',vocab:[{word:'request',meaning:'要求する'},{word:'refund',meaning:'返金'},{word:'within',meaning:'～以内に'}]},
+{cat:'grammar',type:'文法',sentence:'The CEO announced that the company _____ a new branch in Singapore.',choices:['would open','will open','opens','is opening'],answer:0,explanation:'過去時制のannouncedに続く従属節→時制の一致 would open。',syntax:'過去形 + that節 → would（時制の一致）。announced that ～ would。',vocab:[{word:'announce',meaning:'発表する'},{word:'branch',meaning:'支店'},{word:'Singapore',meaning:'シンガポール'}]},
+{cat:'pos',type:'品詞識別',sentence:'The workshop will provide participants with _____ skills for the modern workplace.',choices:['value','valued','valuable','valuably'],answer:2,explanation:'名詞skillsを修飾→形容詞。valuable（形容詞「価値ある」）が正解。',syntax:'形容詞 + 名詞。-able は形容詞語尾（valuable, reliable, availableなど）。',vocab:[{word:'valuable',meaning:'価値ある'},{word:'participant',meaning:'参加者'},{word:'modern',meaning:'現代の'}]},
+{cat:'vocab',type:'語彙',sentence:'The director expressed _____ for the team\'s hard work during the challenging period.',choices:['appreciation','criticism','disappointment','concern'],answer:0,explanation:'「困難な時期のチームの頑張りへの感謝を表した」→appreciation。',syntax:'express appreciation for ～ = ～への感謝を表す。',vocab:[{word:'appreciation',meaning:'感謝・評価'},{word:'express',meaning:'表現する'},{word:'challenging',meaning:'困難な'}]},
+{cat:'grammar',type:'文法',sentence:'_____ submitting your application, please review it carefully one more time.',choices:['Before','After','Upon','While'],answer:0,explanation:'「提出する前に確認する」→Before（～する前に）が正解。',syntax:'Before + -ing = ～する前に。before submitting = 提出する前に。',vocab:[{word:'submit',meaning:'提出する'},{word:'review',meaning:'確認する'},{word:'carefully',meaning:'注意深く'}]},
+{cat:'pos',type:'品詞識別',sentence:'The manager reviewed each application _____ before making a final decision.',choices:['care','careful','carefully','carefulness'],answer:2,explanation:'動詞reviewedを修飾→副詞。careful（形容詞）→carefully（副詞）。',syntax:'動詞 + 副詞（-ly）。carefully = 注意深く。',vocab:[{word:'carefully',meaning:'注意深く'},{word:'review',meaning:'審査する'},{word:'final decision',meaning:'最終決定'}]},
+{cat:'vocab',type:'語彙',sentence:'The conference will _____ topics related to sustainable energy and climate change.',choices:['cover','avoid','ignore','reduce'],answer:0,explanation:'「再生可能エネルギーと気候変動に関するトピックを取り上げる」→cover。',syntax:'cover topics = トピックを取り上げる・扱う。',vocab:[{word:'cover',meaning:'取り上げる・扱う'},{word:'sustainable',meaning:'持続可能な'},{word:'climate change',meaning:'気候変動'}]},
+{cat:'grammar',type:'文法',sentence:'The documents should be filed _____ they can be easily retrieved later.',choices:['so that','in order','as long as','even though'],answer:0,explanation:'「後で容易に取り出せるように」→so that（～するために）が正解。',syntax:'so that + S + can + V = ～できるように（目的）。',vocab:[{word:'file',meaning:'ファイルする・書類整理する'},{word:'retrieve',meaning:'取り出す'},{word:'so that',meaning:'～するために'}]},
+{cat:'pos',type:'品詞識別',sentence:'The employee\'s _____ at the annual awards ceremony was a great surprise.',choices:['appear','appearance','appeared','appearing'],answer:1,explanation:'所有格employeeの後（主語）→名詞。appear（動詞）→appearance（名詞）。',syntax:'-ance / -ence は名詞語尾（appearance, performance, differenceなど）。',vocab:[{word:'appearance',meaning:'登場・外見'},{word:'annual',meaning:'年次の'},{word:'ceremony',meaning:'式典'}]},
+{cat:'vocab',type:'語彙',sentence:'All expenses over $100 require _____ from a department head.',choices:['authorization','opinion','invitation','permission'],answer:0,explanation:'「部門長の承認が必要」→authorization（公式な承認・権限付与）。permissionより公式な文脈。',syntax:'require authorization from ～ = ～からの承認が必要。',vocab:[{word:'authorization',meaning:'承認・権限付与'},{word:'expense',meaning:'費用'},{word:'department head',meaning:'部門長'}]},
+{cat:'grammar',type:'文法',sentence:'The more _____ you practice, the faster you will improve your skills.',choices:['consistently','consistent','consistency','consist'],answer:0,explanation:'the more + 副詞 + S + V 構文。practiceを修飾→副詞consistently。',syntax:'The + 比較級 + S + V, the + 比較級 + S + V = ～すればするほど～。',vocab:[{word:'consistently',meaning:'一貫して・コンスタントに'},{word:'practice',meaning:'練習する'},{word:'improve',meaning:'向上させる'}]},
+{cat:'pos',type:'品詞識別',sentence:'The department head has full _____ to approve purchases under $5,000.',choices:['authorize','authorization','authoritative','authoritatively'],answer:1,explanation:'形容詞fullの後→名詞。authorize（動詞）→authorization（名詞）。',syntax:'full + 名詞 = 完全な～。full authority/authorization = 完全な権限。',vocab:[{word:'authorization',meaning:'権限・承認'},{word:'approve',meaning:'承認する'},{word:'purchase',meaning:'購入'}]},
+{cat:'vocab',type:'語彙',sentence:'The team is working hard to _____ the deadline for the product launch.',choices:['meet','miss','exceed','avoid'],answer:0,explanation:'「製品発売の締め切りを達成する」→meet the deadlineが正解。',syntax:'meet a deadline = 締め切りを守る・達成する。miss a deadline = 締め切りに間に合わない。',vocab:[{word:'meet',meaning:'（期限を）守る・達成する'},{word:'deadline',meaning:'締め切り'},{word:'launch',meaning:'発売・開始'}]},
+{cat:'grammar',type:'文法',sentence:'_____ it was his first time presenting, Mr. Park delivered an impressive speech.',choices:['Although','Because','While','Since'],answer:0,explanation:'「初めてのプレゼンにもかかわらず」逆接→Although。',syntax:'Although + S + V = ～にもかかわらず。逆接の接続詞（=Even though）。',vocab:[{word:'although',meaning:'～にもかかわらず'},{word:'deliver a speech',meaning:'スピーチをする'},{word:'impressive',meaning:'印象的な'}]},
+{cat:'pos',type:'品詞識別',sentence:'A _____ understanding of cultural differences is essential for global business.',choices:['deep','deeply','depth','deepen'],answer:0,explanation:'名詞understandingを修飾→形容詞。deeply（副詞）× → deep（形容詞）◯。',syntax:'形容詞 + 名詞。a deep understanding = 深い理解。',vocab:[{word:'deep',meaning:'深い'},{word:'understanding',meaning:'理解'},{word:'essential',meaning:'不可欠な'}]},
+{cat:'vocab',type:'語彙',sentence:'The new manager is responsible for _____ all daily operations of the department.',choices:['overseeing','ignoring','replacing','reducing'],answer:0,explanation:'「部門の日常業務全体を監督する」→overseeingが正解。',syntax:'be responsible for + -ing = ～する責任がある。oversee = 監督する。',vocab:[{word:'oversee',meaning:'監督する・管理する'},{word:'operation',meaning:'業務・運営'},{word:'responsible',meaning:'責任がある'}]},
+{cat:'grammar',type:'文法',sentence:'The training session is scheduled _____ place on the third floor.',choices:['to take','taking','to be taken','will take'],answer:0,explanation:'be scheduled to do = ～する予定。take place = 開催される。',syntax:'be scheduled to + 動詞原形。take place = 行われる・開催される。',vocab:[{word:'scheduled',meaning:'予定されている'},{word:'take place',meaning:'行われる'},{word:'training',meaning:'研修'}]},
+{cat:'pos',type:'品詞識別',sentence:'The committee will make a _____ on the proposed budget changes next week.',choices:['decide','decision','decisive','decisively'],answer:1,explanation:'冠詞aの後→名詞。make a decision = 決定を下す。',syntax:'make a decision = 決定を下す。decide（動詞）→ decision（名詞）。',vocab:[{word:'decision',meaning:'決定'},{word:'committee',meaning:'委員会'},{word:'proposed',meaning:'提案された'}]},
+{cat:'vocab',type:'語彙',sentence:'Please _____ the terms and conditions carefully before signing the contract.',choices:['read','ignore','avoid','rush'],answer:0,explanation:'「契約書に署名する前に条件を注意深く読む」→read。',syntax:'read ～ carefully = ～を注意深く読む。',vocab:[{word:'terms and conditions',meaning:'利用規約・条件'},{word:'contract',meaning:'契約書'},{word:'carefully',meaning:'注意深く'}]},
+{cat:'grammar',type:'文法',sentence:'The annual budget must be _____ before the end of the fiscal year.',choices:['finalized','finalize','finalizing','to finalize'],answer:0,explanation:'must be + 過去分詞（受動態の義務）。finalize→finalized。',syntax:'must be + 過去分詞 = ～されなければならない（義務の受動態）。',vocab:[{word:'finalize',meaning:'最終決定する'},{word:'fiscal year',meaning:'会計年度'},{word:'budget',meaning:'予算'}]},
+{cat:'pos',type:'品詞識別',sentence:'The accounting department handles all financial _____ for the company.',choices:['transact','transacting','transaction','transactional'],answer:2,explanation:'形容詞financialの後→名詞。transaction（名詞「取引」）が正解。',syntax:'financial + 名詞。transactions = 取引（複数形が一般的）。',vocab:[{word:'transaction',meaning:'取引'},{word:'accounting',meaning:'経理・会計'},{word:'handle',meaning:'処理する・担当する'}]},
+{cat:'vocab',type:'語彙',sentence:'The company will _____ a new office to accommodate the growing team.',choices:['lease','build','sell','close'],answer:0,explanation:'「増加するチームに対応するための新オフィスを借りる」→leaseが正解。',syntax:'lease an office = オフィスを賃借する。accommodate = 収容する・対応する。',vocab:[{word:'lease',meaning:'賃借する・リースする'},{word:'accommodate',meaning:'収容する'},{word:'growing',meaning:'成長する・拡大する'}]},
+{cat:'grammar',type:'文法',sentence:'The proposal _____ by the committee if it had included a detailed budget.',choices:['would have been approved','would be approved','was approved','will be approved'],answer:0,explanation:'if it had included（過去完了）→ 過去の事実と反する仮定→仮定法過去完了。',syntax:'If + had + 過去分詞, would have been + 過去分詞（仮定法過去完了）。',vocab:[{word:'proposal',meaning:'提案書'},{word:'approve',meaning:'承認する'},{word:'budget',meaning:'予算'}]},
+{cat:'pos',type:'品詞識別',sentence:'The _____ expressed in the survey will be used to improve our services.',choices:['opine','opinions','opinionated','opining'],answer:1,explanation:'Theの後、前置詞expressedが後置修飾→主語は名詞。opinions（名詞）が正解。',syntax:'The + 名詞 + 過去分詞（後置修飾）。opinions expressed = 表明された意見。',vocab:[{word:'opinion',meaning:'意見'},{word:'express',meaning:'表明する'},{word:'improve',meaning:'改善する'}]},
+{cat:'vocab',type:'語彙',sentence:'The company plans to _____ its workforce by 10% over the next two years.',choices:['expand','reduce','replace','train'],answer:0,explanation:'「2年間で人員を10%拡大する」→expandが正解。',syntax:'expand the workforce = 人員を拡大する。workforce = 従業員・労働力。',vocab:[{word:'workforce',meaning:'従業員・労働力'},{word:'expand',meaning:'拡大する'},{word:'over the next',meaning:'今後の～で'}]},
+{cat:'grammar',type:'文法',sentence:'The new software _____ to all company computers by the end of next month.',choices:['will have been installed','will install','has installed','is installed'],answer:0,explanation:'by the end of next month（来月末までには）→ 未来完了受動態。',syntax:'By + 未来の時点, will have been + 過去分詞（未来完了受動態）。',vocab:[{word:'install',meaning:'インストールする'},{word:'by the end of',meaning:'～の終わりまでに'},{word:'software',meaning:'ソフトウェア'}]},
+{cat:'pos',type:'品詞識別',sentence:'The research team made a _____ contribution to the field of renewable energy.',choices:['significance','significantly','significant','signify'],answer:2,explanation:'名詞contributionを修飾→形容詞。significantly（副詞）× → significant（形容詞）◯。',syntax:'形容詞 + 名詞。significant contribution = 重大な貢献。',vocab:[{word:'significant',meaning:'重要な・著しい'},{word:'contribution',meaning:'貢献'},{word:'renewable energy',meaning:'再生可能エネルギー'}]},
+{cat:'vocab',type:'語彙',sentence:'Residents are asked to _____ any suspicious activity to the local authorities.',choices:['report','record','ignore','schedule'],answer:0,explanation:'「不審な活動を当局に報告する」→reportが正解。',syntax:'report ～ to ～ = ～を～に報告する。',vocab:[{word:'report',meaning:'報告する'},{word:'suspicious',meaning:'不審な'},{word:'authority',meaning:'当局'}]},
+{cat:'grammar',type:'文法',sentence:'We will proceed with the plan _____ we receive confirmation from the client.',choices:['once','unless','while','despite'],answer:0,explanation:'「クライアントから確認を受けたら計画を進める」→once（一度～したら）。',syntax:'once + S + V = ～したらすぐに・一度～すれば。時の副詞節。',vocab:[{word:'proceed',meaning:'進む・続ける'},{word:'confirmation',meaning:'確認'},{word:'once',meaning:'一度～したら'}]},
+// ── P5Q 追加9問 (合計100問) ──
+{cat:'pos',type:'品詞識別',sentence:'The company experienced _____ growth in overseas markets last year.',choices:['remark','remarkable','remarkably','remarked'],answer:1,explanation:'名詞growthを修飾→形容詞。remarkably（副詞）× → remarkable（形容詞）◯。',syntax:'形容詞 + 名詞。-able は形容詞語尾。remarkable growth = 著しい成長。',vocab:[{word:'remarkable',meaning:'著しい・目覚ましい'},{word:'overseas',meaning:'海外の'},{word:'growth',meaning:'成長'}]},
+{cat:'vocab',type:'語彙',sentence:'The company decided to _____ its older product line to focus on newer models.',choices:['discontinue','continue','extend','launch'],answer:0,explanation:'「旧製品ラインを廃止する」→discontinue（廃止する）が正解。',syntax:'discontinue a product line = 製品ラインを廃止する。dis- は否定・逆の接頭辞。',vocab:[{word:'discontinue',meaning:'廃止する・中止する'},{word:'product line',meaning:'製品ライン'},{word:'focus on',meaning:'～に集中する'}]},
+{cat:'grammar',type:'文法',sentence:'The new cafeteria, _____ opened last month, has already become popular with staff.',choices:['which','who','that','what'],answer:0,explanation:'コンマ後の関係代名詞→非制限用法はwhichのみ。先行詞はThe new cafeteria（もの）。',syntax:'コンマ + which = 非制限用法。先行詞が物・場所・ことがらのとき。',vocab:[{word:'cafeteria',meaning:'カフェテリア'},{word:'popular',meaning:'人気のある'},{word:'already',meaning:'すでに'}]},
+{cat:'pos',type:'品詞識別',sentence:'The training program was _____ designed to meet the needs of new employees.',choices:['special','specially','specialize','specialty'],answer:1,explanation:'be動詞+過去分詞（designed）を修飾→副詞。special→specially。',syntax:'be + 副詞 + 過去分詞。specially designed = 特別に設計された。',vocab:[{word:'specially',meaning:'特別に'},{word:'design',meaning:'設計する'},{word:'meet needs',meaning:'ニーズを満たす'}]},
+{cat:'vocab',type:'語彙',sentence:'The construction of the new bridge will _____ traffic flow in the city center.',choices:['improve','reduce','block','limit'],answer:0,explanation:'「新しい橋の建設が交通流を改善する」→improve（改善する）が正解。',syntax:'improve traffic flow = 交通の流れを改善する。',vocab:[{word:'improve',meaning:'改善する'},{word:'traffic flow',meaning:'交通の流れ'},{word:'construction',meaning:'建設'}]},
+{cat:'grammar',type:'文法',sentence:'Employees are encouraged to share _____ ideas during the weekly brainstorming sessions.',choices:['they','their','them','themselves'],answer:1,explanation:'名詞ideasを修飾→所有格their（彼らの）が正解。',syntax:'所有格 + 名詞。their ideas = 彼らのアイデア。',vocab:[{word:'encourage',meaning:'奨励する'},{word:'brainstorming',meaning:'ブレインストーミング'},{word:'weekly',meaning:'毎週の'}]},
+{cat:'pos',type:'品詞識別',sentence:'The event was _____ successful that it will be held again next year.',choices:['so','such','very','too'],answer:0,explanation:'so ～ that 構文。「非常に成功したので来年もまた開催される」。so + 形容詞 + that。',syntax:'so + 形容詞/副詞 + that ～ = とても～なので…。such + 名詞句 + that との区別に注意。',vocab:[{word:'so ～ that',meaning:'とても～なので…'},{word:'successful',meaning:'成功した'},{word:'hold',meaning:'開催する'}]},
+{cat:'vocab',type:'語彙',sentence:'Our company will _____ the annual charity gala for the fifth consecutive year.',choices:['host','attend','cancel','organize'],answer:0,explanation:'「5年連続で年次チャリティーガラを主催する」→host（主催する）が正解。organizeとの違いに注意。',syntax:'host an event = イベントを主催する。organize = 企画・運営する。',vocab:[{word:'host',meaning:'主催する'},{word:'consecutive',meaning:'連続した'},{word:'charity',meaning:'慈善'}]},
+{cat:'grammar',type:'文法',sentence:'The legal team reviewed the contract _____ before it was signed by both parties.',choices:['thoroughly','thorough','thoroughness','thoroughed'],answer:0,explanation:'動詞reviewedを修飾→副詞。thorough（形容詞）→thoroughly（副詞）。',syntax:'動詞 + 副詞（-ly）。reviewed thoroughly = 徹底的に審査した。',vocab:[{word:'thoroughly',meaning:'徹底的に'},{word:'legal team',meaning:'法務チーム'},{word:'both parties',meaning:'双方'}]}
+];
+
+// ══════════════════════════════════════
+// PART 6 SETS — 16セット
+// 各セット: title, type, passage(____で空欄), translation, questions[4]
+// ══════════════════════════════════════
+const P6S = [
+{
+  title:"Memo: Office Equipment Update",type:"Memo",
+  passage:"TO: All Staff\nFROM: Facilities Department\n\nWe are pleased to inform you that new workstations will be __1__ to all employees on the third and fourth floors starting next Monday. The installation process is __2__ to take approximately two hours per workstation. During this time, employees may be __3__ to work in the temporary workspace on the second floor. Please ensure that all personal items are removed from your desk by Friday afternoon to __4__ the installation team to work efficiently.",
+  translation:"全スタッフへ。来週月曜日より、3・4階の全従業員に新しいワークステーションが配備されます。設置作業は1台につき約2時間かかる予定です。この間、従業員は2階の一時的な作業スペースで作業していただく場合があります。設置チームが効率よく作業できるよう、金曜日の午後までに机の私物をすべて取り除いてください。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["distributed","requested","evaluated","purchased"],answer:0,ev:"new workstations will be __1__ to all employees",exp:"「全従業員に配布される」→ distributed（配布された）が正解。be distributed to = ～に配布される。",syntax:"be distributed to ～ = ～に配布される。distribute（動詞）→ distribution（名詞）。",vocab:[{word:"distribute",meaning:"配布する"},{word:"workstation",meaning:"ワークステーション"},{word:"install",meaning:"設置する"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["expected","requested","forced","allowed"],answer:0,ev:"The installation process is __2__ to take approximately two hours",exp:"be expected to do = ～する予定・見込み。「約2時間かかる予定」。",syntax:"be expected to do = ～すると予想される・見込み。is expected to take ～。",vocab:[{word:"expected",meaning:"予定の・見込みの"},{word:"installation",meaning:"設置"},{word:"approximately",meaning:"約"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["asked","forced","prevented","required"],answer:0,ev:"employees may be __3__ to work in the temporary workspace",exp:"丁寧に依頼する文脈→ be asked to do（～するよう求められる）が最適。",syntax:"be asked to do = ～するよう依頼される。may be asked = ～するよう求められる場合がある。",vocab:[{word:"asked",meaning:"求められた"},{word:"temporary",meaning:"一時的な"},{word:"workspace",meaning:"作業スペース"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["allow","force","prevent","require"],answer:0,ev:"to __4__ the installation team to work efficiently",exp:"to allow A to do = AがBできるようにする。「設置チームが効率よく作業できるように」。",syntax:"allow A to do = AがBできるようにする。to allow は目的を表す不定詞。",vocab:[{word:"allow",meaning:"許可する・可能にする"},{word:"efficiently",meaning:"効率よく"},{word:"ensure",meaning:"確実にする"}]}
+  ]
+},
+{
+  title:"Email: Project Deadline Extension",type:"Email",
+  passage:"Dear Ms. Thornton,\n\nI am writing to request a brief __1__ to the project submission deadline. As our team has encountered some __2__ technical issues this week, we have been unable to complete the final testing phase as planned. We believe we will need an __3__ three business days to ensure the deliverables meet the required quality standards. We __4__ for any inconvenience this may cause and look forward to your response.\n\nBest regards,\nDaniel Walsh",
+  translation:"ソーントン様、プロジェクト提出期限の短い延長をお願いするためにご連絡しています。今週、いくつかの予期せぬ技術的な問題が発生し、予定通りの最終テストフェーズを完了することができませんでした。納品物が品質基準を満たすことを確認するために、追加で3営業日が必要と考えております。ご不便をおかけして大変申し訳ございません。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["extension","reduction","cancellation","revision"],answer:0,ev:"request a brief __1__ to the project submission deadline",exp:"「締め切りの延長をお願いする」→extension（延長）が正解。",syntax:"request an extension = 延長を求める。extension to the deadline = 締め切りの延長。",vocab:[{word:"extension",meaning:"延長"},{word:"submission",meaning:"提出"},{word:"deadline",meaning:"締め切り"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["unexpected","expected","minor","planned"],answer:0,ev:"encountered some __2__ technical issues this week",exp:"「遭遇した予期せぬ技術的な問題」→unexpected（予期せぬ）が正解。",syntax:"unexpected issues = 予期せぬ問題。encounter = 遭遇する。",vocab:[{word:"unexpected",meaning:"予期せぬ"},{word:"encounter",meaning:"遭遇する"},{word:"technical",meaning:"技術的な"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["additional","single","final","original"],answer:0,ev:"we will need an __3__ three business days",exp:"「さらに3営業日が必要」→additional（追加の）が正解。",syntax:"an additional + 数字 = さらに～の。additional time = 追加の時間。",vocab:[{word:"additional",meaning:"追加の"},{word:"business day",meaning:"営業日"},{word:"deliverable",meaning:"納品物"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["apologize","appreciate","insist","suggest"],answer:0,ev:"We __4__ for any inconvenience this may cause",exp:"「ご不便をおかけして謝罪します」→apologize（謝罪する）が正解。",syntax:"apologize for ～ = ～のことを謝罪する。We apologize for any inconvenience。",vocab:[{word:"apologize",meaning:"謝罪する"},{word:"inconvenience",meaning:"不便・ご迷惑"},{word:"cause",meaning:"引き起こす"}]}
+  ]
+},
+{
+  title:"Notice: New Cafeteria Hours",type:"Notice",
+  passage:"NOTICE TO ALL BUILDING TENANTS\n\nEffective Monday, October 15th, the building cafeteria will __1__ its operating hours. The cafeteria will now be open from 7:00 A.M. to 7:00 P.M. on weekdays. Weekend service will be __2__ until further notice. These changes are being implemented to better __3__ the needs of tenants who work early mornings or late evenings. Vending machines on each floor will remain __4__ 24 hours a day for your convenience.",
+  translation:"全テナントへのお知らせ。10月15日（月）より、建物のカフェテリアは営業時間を延長します。カフェテリアは平日午前7時〜午後7時に営業します。週末のサービスは追って通知があるまで休止します。これらの変更は早朝または夜間に勤務するテナントのニーズに対応するために実施されます。各フロアの自動販売機はご利用の便宜のため24時間利用可能です。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["extend","reduce","cancel","relocate"],answer:0,ev:"the building cafeteria will __1__ its operating hours",exp:"「営業時間を延長する」→extend（延長する）が正解。",syntax:"extend operating hours = 営業時間を延長する。",vocab:[{word:"extend",meaning:"延長する"},{word:"operating hours",meaning:"営業時間"},{word:"effective",meaning:"有効な・施行される"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["suspended","extended","available","required"],answer:0,ev:"Weekend service will be __2__ until further notice",exp:"「週末サービスは追って通知があるまで停止」→suspended（停止された）。",syntax:"be suspended = 停止される。until further notice = 追って通知があるまで。",vocab:[{word:"suspend",meaning:"停止する"},{word:"until further notice",meaning:"追って通知があるまで"},{word:"weekend",meaning:"週末"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["accommodate","ignore","reduce","prevent"],answer:0,ev:"to better __3__ the needs of tenants",exp:"「テナントのニーズに対応するために」→accommodate（対応する）が正解。",syntax:"accommodate the needs of ～ = ～のニーズに対応する。",vocab:[{word:"accommodate",meaning:"対応する・収容する"},{word:"tenant",meaning:"テナント・入居者"},{word:"implement",meaning:"実施する"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["available","closed","required","limited"],answer:0,ev:"Vending machines on each floor will remain __4__ 24 hours",exp:"「自動販売機は24時間利用可能」→available（利用可能な）。remain + 形容詞。",syntax:"remain available = 利用可能な状態を保つ。remain + 形容詞 = ～のままである。",vocab:[{word:"available",meaning:"利用可能な"},{word:"vending machine",meaning:"自動販売機"},{word:"convenience",meaning:"利便性"}]}
+  ]
+},
+{
+  title:"Advertisement: Professional Training Program",type:"Advertisement",
+  passage:"Take your career to the next level with ProSkills Academy's Advanced Management Training Program. __1__ over 25 years, ProSkills Academy has helped thousands of professionals achieve their career goals. Our program is __2__ for mid-level managers looking to develop leadership and strategic thinking skills. Participants will gain hands-on experience through real-world case studies and group projects. Upon successful __3__ of the program, participants will receive an internationally recognized certificate. __4__ by calling 555-0188 or visiting our website at proskills.com today.",
+  translation:"プロスキルズアカデミーのアドバンスドマネジメントトレーニングプログラムでキャリアを次のレベルへ。25年以上にわたり、プロスキルズアカデミーは何千人ものプロフェッショナルがキャリア目標を達成するサポートをしてきました。当プログラムはリーダーシップと戦略的思考スキルを開発したい中間管理職の方に最適です。修了者は国際的に認められた証明書を受け取ります。",
+  questions:[
+    {q:"__1__",text:"Which phrase best fills blank 1?",choices:["For","During","Since","By"],answer:0,ev:"__1__ over 25 years, ProSkills Academy has helped",exp:"「25年以上にわたって」→For（期間）。現在完了 has helped と一緒に使う。",syntax:"For + 期間 + 現在完了形。for over 25 years = 25年以上にわたって。",vocab:[{word:"for",meaning:"（期間）～にわたって"},{word:"achieve",meaning:"達成する"},{word:"professional",meaning:"プロフェッショナル"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["designed","required","forced","limited"],answer:0,ev:"Our program is __2__ for mid-level managers",exp:"「中間管理職向けに設計されている」→designed for（～向けに設計された）。",syntax:"be designed for ～ = ～向けに設計されている。designed for + 対象。",vocab:[{word:"designed",meaning:"設計された・～向けの"},{word:"mid-level",meaning:"中間の"},{word:"strategic",meaning:"戦略的な"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["completion","beginning","registration","evaluation"],answer:0,ev:"Upon successful __3__ of the program",exp:"「プログラムの修了時に」→completion（修了・完了）。Upon completion of = 修了時に。",syntax:"upon completion of ～ = ～を修了した際に。completion = 修了・完了（名詞）。",vocab:[{word:"completion",meaning:"修了・完了"},{word:"certificate",meaning:"証明書"},{word:"internationally",meaning:"国際的に"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["Enroll","Apply","Subscribe","Register"],answer:0,ev:"__4__ by calling 555-0188 or visiting our website",exp:"「電話またはウェブサイトで登録する」→Enroll（入学・登録する）が最適。",syntax:"Enroll by doing = ～することで登録する。enroll in a program = プログラムに登録する。",vocab:[{word:"enroll",meaning:"登録する・入学する"},{word:"recognized",meaning:"認められた"},{word:"hands-on",meaning:"実践的な"}]}
+  ]
+},
+{
+  title:"Letter: Subscription Cancellation",type:"Letter",
+  passage:"Dear Customer Service Team,\n\nI am writing to formally __1__ my subscription to the PremiumTech monthly service plan. I have been a subscriber for three years, but I have recently decided to __2__ to a competitor's service that better suits my current needs. I would appreciate it if you could confirm the __3__ of my subscription and let me know if any final charges will be applied to my account. Please also ensure that my personal data is __4__ from your system in accordance with your privacy policy.\n\nSincerely,\nHiroshi Tanaka",
+  translation:"カスタマーサービスチームの皆様、プレミアムテックの月額サービスプランの定期購読を正式に解約するためにご連絡しています。3年間ご利用していますが、現在のニーズによりよく合う競合他社のサービスに切り替えることにしました。解約の確認と最終請求の有無をお知らせいただければ幸いです。また、プライバシーポリシーに従って個人データをシステムから削除していただくようお願いします。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["cancel","extend","upgrade","renew"],answer:0,ev:"I am writing to formally __1__ my subscription",exp:"「定期購読を解約する」→cancel（解約する）が正解。",syntax:"cancel a subscription = 定期購読を解約する。formally cancel = 正式に解約する。",vocab:[{word:"cancel",meaning:"解約する・キャンセルする"},{word:"subscription",meaning:"定期購読"},{word:"formally",meaning:"正式に"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["switch","subscribe","move","transfer"],answer:0,ev:"decided to __2__ to a competitor's service",exp:"「競合他社のサービスに切り替える」→switch to（乗り換える）が正解。",syntax:"switch to ～ = ～に乗り換える・切り替える。switch to a competitor。",vocab:[{word:"switch",meaning:"切り替える"},{word:"competitor",meaning:"競合他社"},{word:"suit",meaning:"適する"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["cancellation","extension","renewal","suspension"],answer:0,ev:"confirm the __3__ of my subscription",exp:"「解約の確認」→cancellation（解約）が正解。cancel → cancellation。",syntax:"cancellation of ～ = ～の解約・取り消し。confirm the cancellation = 解約を確認する。",vocab:[{word:"cancellation",meaning:"解約・キャンセル"},{word:"confirm",meaning:"確認する"},{word:"charge",meaning:"請求"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["deleted","stored","shared","transferred"],answer:0,ev:"my personal data is __4__ from your system",exp:"「個人データをシステムから削除する」→deleted（削除された）が正解。",syntax:"be deleted from ～ = ～から削除される（受動態）。",vocab:[{word:"delete",meaning:"削除する"},{word:"personal data",meaning:"個人データ"},{word:"privacy policy",meaning:"プライバシーポリシー"}]}
+  ]
+},
+{
+  title:"Report: Survey Results",type:"Report",
+  passage:"This report summarizes the __1__ of our annual employee satisfaction survey. A total of 450 employees __2__ in the survey, representing 82% of our workforce. The results indicate that overall job satisfaction has __3__ by 8 percentage points compared to last year. The most commonly __4__ area for improvement was communication between management and staff. Based on these findings, the HR department will develop targeted initiatives to address this concern.",
+  translation:"この報告書は年次従業員満足度調査の結果をまとめたものです。合計450名の従業員が調査に参加し、従業員全体の82%を占めました。結果によると、全体的な職務満足度は昨年と比べて8ポイント向上しました。改善を求める声として最も多かったのは、管理職とスタッフ間のコミュニケーションでした。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["findings","questions","instructions","responses"],answer:0,ev:"summarizes the __1__ of our annual employee satisfaction survey",exp:"「調査の結果・発見」→findings（調査結果）が正解。",syntax:"findings = （調査の）発見・結果。summarize the findings = 結果をまとめる。",vocab:[{word:"findings",meaning:"調査結果・発見"},{word:"summarize",meaning:"まとめる"},{word:"annual",meaning:"年次の"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["participated","organized","reviewed","rejected"],answer:0,ev:"450 employees __2__ in the survey",exp:"「調査に参加した」→participated in（参加した）が正解。",syntax:"participate in ～ = ～に参加する。participated（過去形）。",vocab:[{word:"participate",meaning:"参加する"},{word:"workforce",meaning:"従業員全体"},{word:"represent",meaning:"占める・代表する"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["increased","decreased","remained","fluctuated"],answer:0,ev:"overall job satisfaction has __3__ by 8 percentage points",exp:"「8ポイント向上した」→increased（増加した）が正解。by 8 points = 8ポイント分。",syntax:"increase by ～ = ～だけ増加する。by + 数値 は差分・変化量。",vocab:[{word:"increase",meaning:"増加する"},{word:"percentage point",meaning:"パーセントポイント"},{word:"overall",meaning:"全体的な"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["cited","ignored","praised","avoided"],answer:0,ev:"The most commonly __4__ area for improvement",exp:"「最も多く挙げられた改善領域」→cited（挙げられた）が正解。",syntax:"cite A as B = AをBとして挙げる。cited（過去分詞で形容詞的に使用）。",vocab:[{word:"cite",meaning:"挙げる・引用する"},{word:"improvement",meaning:"改善"},{word:"initiative",meaning:"取り組み・施策"}]}
+  ]
+},
+{
+  title:"Memo: Travel Policy Update",type:"Memo",
+  passage:"TO: All Employees\nFROM: Finance Department\n\nEffective immediately, all business travel must be __1__ through our new online booking system, TravelEase. Employees who book travel __2__ this system will not be reimbursed. Hotel accommodations must not __3__ $200 per night unless prior approval has been obtained from a department head. All meal expenses are __4__ at $60 per day. Receipts are required for all expenses over $20.",
+  translation:"全従業員へ。即時有効で、全ての出張は新しいオンライン予約システム「TravelEase」を通じて手配しなければなりません。このシステム外で予約した従業員は経費が払い戻されません。ホテルは部門長の事前承認がない限り1泊200ドルを超えてはなりません。食事代は1日60ドルまでカバーされます。20ドル超の費用にはレシートが必要です。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["booked","organized","managed","processed"],answer:0,ev:"all business travel must be __1__ through our new online booking system",exp:"「新しい予約システムを通じて予約されなければならない」→booked（予約された）。",syntax:"must be booked = 予約されなければならない（義務の受動態）。",vocab:[{word:"book",meaning:"予約する"},{word:"booking system",meaning:"予約システム"},{word:"effective",meaning:"有効な"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["outside","through","within","alongside"],answer:0,ev:"Employees who book travel __2__ this system will not be reimbursed",exp:"「このシステム外で予約した」→outside（～の外で）が正解。",syntax:"outside this system = このシステム以外で。outside = ～の外で（前置詞）。",vocab:[{word:"outside",meaning:"～の外で"},{word:"reimburse",meaning:"払い戻す"},{word:"obtain",meaning:"取得する"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["exceed","include","require","provide"],answer:0,ev:"Hotel accommodations must not __3__ $200 per night",exp:"「1泊200ドルを超えてはならない」→exceed（超える）が正解。must not exceed。",syntax:"must not exceed ～ = ～を超えてはならない。exceed = 超える。",vocab:[{word:"exceed",meaning:"超える"},{word:"accommodation",meaning:"宿泊"},{word:"prior",meaning:"事前の"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["capped","allowed","provided","required"],answer:0,ev:"All meal expenses are __4__ at $60 per day",exp:"「食事代は1日60ドルが上限」→capped at（上限を設けられている）。",syntax:"be capped at ～ = ～が上限に設定されている。cap = 上限を設ける。",vocab:[{word:"cap",meaning:"上限を設ける"},{word:"meal expense",meaning:"食事代"},{word:"receipt",meaning:"レシート"}]}
+  ]
+},
+{
+  title:"Article: Remote Work Trends",type:"Article",
+  passage:"A recent industry survey __1__ that remote work has become a permanent feature of the modern workplace for many companies. The survey, which __2__ responses from over 3,000 HR managers worldwide, found that 67% of organizations now offer some form of flexible work arrangement. Productivity among remote workers has generally __3__, with many employees reporting higher job satisfaction. However, challenges __4__ communication and team cohesion remain a concern for managers.",
+  translation:"最新の業界調査によると、多くの企業でリモートワークが現代の職場の恒久的な特徴となっています。世界中の3,000人以上の人事マネージャーの回答を集めた調査では、67%の組織が何らかの柔軟な働き方を提供していることがわかりました。リモートワーカーの生産性は全体的に向上しており、多くの従業員が職務満足度の向上を報告しています。ただし、コミュニケーションとチームの結束に関する課題はマネージャーの懸念事項として残っています。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["reveals","hides","prevents","requires"],answer:0,ev:"A recent industry survey __1__ that remote work",exp:"「調査が示す・明らかにする」→reveals（明らかにする）が正解。",syntax:"reveal that ～ = ～ということを明らかにする。研究・調査の主語として頻出。",vocab:[{word:"reveal",meaning:"明らかにする"},{word:"permanent",meaning:"恒久的な"},{word:"feature",meaning:"特徴"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["collected","ignored","rejected","replaced"],answer:0,ev:"The survey, which __2__ responses from over 3,000",exp:"「3,000人以上の回答を収集した」→collected（収集した）が正解。",syntax:"collect responses = 回答を収集する。",vocab:[{word:"collect",meaning:"収集する"},{word:"response",meaning:"回答"},{word:"organization",meaning:"組織"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["improved","declined","remained","fluctuated"],answer:0,ev:"Productivity among remote workers has generally __3__",exp:"「リモートワーカーの生産性は全体的に向上した」→improved。",syntax:"has improved = 向上した（現在完了）。generally = 全体的に。",vocab:[{word:"improve",meaning:"向上する"},{word:"productivity",meaning:"生産性"},{word:"generally",meaning:"全体的に"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["related to","caused by","resulting in","depending on"],answer:0,ev:"challenges __4__ communication and team cohesion remain",exp:"「コミュニケーションに関連する課題」→related to（～に関連する）が正解。",syntax:"challenges related to ～ = ～に関する課題。related to = ～に関連した（形容詞句）。",vocab:[{word:"related to",meaning:"～に関連した"},{word:"cohesion",meaning:"結束・凝集性"},{word:"concern",meaning:"懸念事項"}]}
+  ]
+},
+{
+  title:"Notice: System Maintenance",type:"Notice",
+  passage:"IMPORTANT NOTICE\n\nA scheduled system __1__ will take place on Saturday, December 9th, from 10:00 P.M. to 2:00 A.M. During this time, all company systems, including email and the internal portal, will be __2__. Employees who need to access important files before the maintenance window are __3__ to download them in advance. The update is necessary to __4__ critical security patches and improve overall system performance. We apologize for any disruption this may cause.",
+  translation:"重要なお知らせ。12月9日（土）午後10時〜午前2時に定期システムメンテナンスが実施されます。この間、メールや社内ポータルを含む全会社システムが利用不可となります。メンテナンス前に重要なファイルにアクセスする必要がある従業員は、事前にダウンロードすることをお勧めします。このアップデートは重要なセキュリティパッチを適用し、全体的なシステムパフォーマンスを改善するために必要です。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["maintenance","expansion","installation","evaluation"],answer:0,ev:"A scheduled system __1__ will take place",exp:"「定期システムメンテナンスが実施される」→maintenance（メンテナンス）。",syntax:"system maintenance = システムメンテナンス。scheduled maintenance = 定期メンテナンス。",vocab:[{word:"maintenance",meaning:"メンテナンス・保守"},{word:"scheduled",meaning:"定期的な・予定された"},{word:"take place",meaning:"実施される"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["unavailable","available","upgraded","restricted"],answer:0,ev:"all company systems will be __2__",exp:"「全会社システムが利用不可になる」→unavailable（利用不可）が正解。",syntax:"be unavailable = 利用できない状態。un- は否定の接頭辞。",vocab:[{word:"unavailable",meaning:"利用不可の"},{word:"portal",meaning:"ポータルサイト"},{word:"internal",meaning:"社内の"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["advised","forced","required","prevented"],answer:0,ev:"employees who need to access important files are __3__ to download",exp:"「ダウンロードするよう助言される」→advised（勧告される）が最適。",syntax:"be advised to do = ～するよう勧告される。丁寧な推奨表現。",vocab:[{word:"advise",meaning:"勧告する・アドバイスする"},{word:"access",meaning:"アクセスする"},{word:"in advance",meaning:"事前に"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["install","improve","update","apply"],answer:3,ev:"The update is necessary to __4__ critical security patches",exp:"「重要なセキュリティパッチを適用する」→apply（適用する）が正解。",syntax:"apply patches = パッチを適用する。apply = 適用する（ITの文脈で頻出）。",vocab:[{word:"apply",meaning:"適用する"},{word:"patch",meaning:"パッチ・修正プログラム"},{word:"critical",meaning:"重要な"}]}
+  ]
+},
+{
+  title:"Email: Customer Complaint Response",type:"Email",
+  passage:"Dear Ms. Watanabe,\n\nThank you for __1__ us about the issue with your recent order. We sincerely apologize for the __2__ you have experienced. After reviewing your case, we have confirmed that an error occurred during the packaging process. We would like to offer you a full __3__ or a replacement item at no additional cost. Please let us know your __4__ and we will process it within two business days.\n\nSincerely,\nCustomer Care Team",
+  translation:"渡辺様、最近のご注文に関する問題についてご連絡いただきありがとうございます。ご不便をおかけして誠に申し訳ございません。ケースを確認した結果、梱包工程でエラーが発生したことを確認しました。追加費用なしに全額返金または交換品をご提供したいと思います。ご希望をお知らせいただければ、2営業日以内に手続きを行います。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["contacting","informing","notifying","reaching"],answer:0,ev:"Thank you for __1__ us about the issue",exp:"「ご連絡いただきありがとう」→contacting us（私どもに連絡する）が最自然。",syntax:"Thank you for + -ing = ～していただきありがとう。contact us = ご連絡いただく。",vocab:[{word:"contact",meaning:"連絡する"},{word:"issue",meaning:"問題"},{word:"recent",meaning:"最近の"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["inconvenience","delay","damage","error"],answer:0,ev:"We sincerely apologize for the __2__ you have experienced",exp:"「ご不便をおかけして謝罪します」→inconvenience（ご不便・ご迷惑）が最適。",syntax:"apologize for the inconvenience = ご不便をおかけして謝罪する。定型表現。",vocab:[{word:"inconvenience",meaning:"不便・ご迷惑"},{word:"sincerely",meaning:"誠に"},{word:"apologize",meaning:"謝罪する"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["refund","replacement","discount","credit"],answer:0,ev:"We would like to offer you a full __3__",exp:"「全額返金を提供する」→refund（返金）が正解。a full refund = 全額返金。",syntax:"offer a full refund = 全額返金を申し出る。full refund = 全額返金。",vocab:[{word:"refund",meaning:"返金"},{word:"replacement",meaning:"交換品"},{word:"additional cost",meaning:"追加費用"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["preference","complaint","opinion","suggestion"],answer:0,ev:"Please let us know your __4__",exp:"「ご希望をお知らせください」→preference（ご希望・ご要望）が正解。",syntax:"let us know your preference = ご希望をお知らせください。",vocab:[{word:"preference",meaning:"希望・好み"},{word:"process",meaning:"処理する"},{word:"business day",meaning:"営業日"}]}
+  ]
+},
+{
+  title:"Announcement: Company Relocation",type:"Announcement",
+  passage:"We are pleased to __1__ that Horizon Solutions will be relocating its headquarters to a new facility at 520 Innovation Drive, Suite 1200. The move is __2__ for the third week of March. The new location offers significantly more office space and state-of-the-art conference facilities to __3__ our growing team. During the transition period, all phone numbers and email addresses will __4__ the same. Detailed information regarding the move will be __5__ in the coming weeks.",
+  translation:"ホライゾン・ソリューションズは本社をイノベーションドライブ520番地の新しい施設に移転することをお知らせします。移転は3月第3週を予定しています。新しい場所は増大するチームに対応するため、はるかに広いオフィススペースと最新の会議施設を提供します。移行期間中、電話番号とメールアドレスはすべて変わりません。移転に関する詳細情報は今後数週間以内に配布されます。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["announce","inform","report","state"],answer:0,ev:"We are pleased to __1__ that Horizon Solutions will be relocating",exp:"「ご報告できることを嬉しく思います」→announce（発表する）が正解。pleased to announce は定型表現。",syntax:"We are pleased to announce that ～ = ～をお知らせできることを嬉しく思います。",vocab:[{word:"announce",meaning:"発表する"},{word:"relocate",meaning:"移転する"},{word:"headquarters",meaning:"本社"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["scheduled","expected","planned","required"],answer:0,ev:"The move is __2__ for the third week of March",exp:"「移転は3月第3週に予定されている」→scheduled for（～に予定された）が正解。",syntax:"be scheduled for ～ = ～に予定されている。scheduled for + 日時。",vocab:[{word:"scheduled",meaning:"予定されている"},{word:"facility",meaning:"施設"},{word:"state-of-the-art",meaning:"最新の"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["accommodate","impress","support","attract"],answer:0,ev:"to __3__ our growing team",exp:"「増大するチームに対応するために」→accommodate（対応する・収容する）。",syntax:"accommodate ～ = ～に対応する・収容する。growing team = 拡大するチーム。",vocab:[{word:"accommodate",meaning:"収容する・対応する"},{word:"growing",meaning:"拡大する"},{word:"significantly",meaning:"大幅に"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["remain","change","update","transfer"],answer:0,ev:"all phone numbers and email addresses will __4__ the same",exp:"「同じままになる」→remain（～のままである）が正解。will remain the same。",syntax:"remain + 形容詞 = ～のままである。remain the same = 同じままである。",vocab:[{word:"remain",meaning:"～のままである"},{word:"transition",meaning:"移行"},{word:"detailed",meaning:"詳細な"}]}
+  ]
+},
+{
+  title:"Report: Q2 Financial Results",type:"Report",
+  passage:"Pinnacle Corporation is pleased to report strong financial results for the second quarter. Total revenue __1__ by 14% year-over-year to $2.4 billion, driven primarily by growth in the Asia-Pacific region. Operating expenses __2__ within budget, contributing to an operating margin of 22%. Net income __3__ $380 million, surpassing analyst expectations. The company remains __4__ to achieving its full-year revenue target of $9 billion.",
+  translation:"ピナクルコーポレーションは第2四半期の好調な財務結果を報告します。総収益は前年比14%増の24億ドルとなり、主にアジア太平洋地域の成長に牽引されました。営業費用は予算内に収まり、22%の営業利益率に貢献しました。純利益は3億8,000万ドルとなり、アナリスト予測を上回りました。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["increased","declined","stabilized","fluctuated"],answer:0,ev:"Total revenue __1__ by 14% year-over-year",exp:"「前年比14%増加」→increased（増加した）が正解。by 14% = 14%分の増加。",syntax:"increase by ～% = ～%増加する。year-over-year = 前年比で。",vocab:[{word:"increase",meaning:"増加する"},{word:"year-over-year",meaning:"前年比"},{word:"revenue",meaning:"収益"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["remained","exceeded","reduced","expanded"],answer:0,ev:"Operating expenses __2__ within budget",exp:"「営業費用は予算内に収まった」→remained within（～以内に収まった）。",syntax:"remain within budget = 予算内に収まる。remain + 前置詞句。",vocab:[{word:"remain",meaning:"～のままである・～内に収まる"},{word:"operating expense",meaning:"営業費用"},{word:"budget",meaning:"予算"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["reached","missed","declined","maintained"],answer:0,ev:"Net income __3__ $380 million, surpassing analyst expectations",exp:"「純利益が3億8,000万ドルに達した」→reached（達した）が正解。",syntax:"reach ～ = ～に達する。net income reached ～ million。",vocab:[{word:"reach",meaning:"達する"},{word:"surpass",meaning:"上回る"},{word:"net income",meaning:"純利益"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["committed","opposed","limited","resistant"],answer:0,ev:"The company remains __4__ to achieving its full-year revenue target",exp:"「年間収益目標達成にコミットしている」→committed to（コミットしている）。",syntax:"be committed to + -ing = ～することにコミットしている。to は前置詞 → 動名詞。",vocab:[{word:"committed",meaning:"コミットしている・誓約した"},{word:"target",meaning:"目標"},{word:"full-year",meaning:"通期の"}]}
+  ]
+},
+{
+  title:"Email: New Employee Welcome",type:"Email",
+  passage:"Dear Ms. Chen,\n\nWelcome to Brightfield Industries! We are __1__ to have you join our team as a Senior Marketing Analyst. Your first day will be Monday, April 7th. Please report to the reception desk on the ground floor at 9:00 A.M., where you will be __2__ by a member of the HR team. During your first week, you will __3__ an orientation program designed to introduce you to our company culture and processes. Please __4__ your government-issued ID and bank account information for payroll setup.\n\nWarm regards,\nHR Department",
+  translation:"陳様、ブライトフィールドインダストリーズへようこそ！シニアマーケティングアナリストとしてチームに加わっていただけることを嬉しく思います。初日は4月7日（月）です。午前9時に1階の受付にお越しください。そこで人事チームのメンバーが出迎えます。最初の週には、会社の文化とプロセスを紹介するためのオリエンテーションプログラムを受けていただきます。給与設定のために政府発行の身分証明書と銀行口座情報をご持参ください。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["delighted","required","expected","advised"],answer:0,ev:"We are __1__ to have you join our team",exp:"「チームに加わっていただけることを嬉しく思います」→delighted（喜んでいる）。",syntax:"be delighted to do = ～できて嬉しい。We are pleased / delighted to ～。",vocab:[{word:"delighted",meaning:"喜んでいる"},{word:"analyst",meaning:"アナリスト"},{word:"marketing",meaning:"マーケティング"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["greeted","evaluated","trained","introduced"],answer:0,ev:"you will be __2__ by a member of the HR team",exp:"「人事チームのメンバーが出迎える」→greeted（迎えられる）が正解。",syntax:"be greeted by ～ = ～に出迎えられる（受動態）。",vocab:[{word:"greet",meaning:"出迎える"},{word:"reception",meaning:"受付"},{word:"ground floor",meaning:"1階"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["complete","attend","design","arrange"],answer:1,ev:"you will __3__ an orientation program",exp:"「オリエンテーションプログラムに参加する」→attend（参加する）が正解。",syntax:"attend a program = プログラムに参加する。attend ≠ complete（完了する）。",vocab:[{word:"attend",meaning:"参加する"},{word:"orientation",meaning:"オリエンテーション"},{word:"introduce",meaning:"紹介する"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["bring","submit","upload","send"],answer:0,ev:"Please __4__ your government-issued ID and bank account information",exp:"「身分証と銀行情報を持参してください」→bring（持参する）が正解。",syntax:"bring ～ = ～を持参する。bring + 物（直接持ってくる）。",vocab:[{word:"bring",meaning:"持参する"},{word:"government-issued",meaning:"政府発行の"},{word:"payroll",meaning:"給与計算"}]}
+  ]
+},
+{
+  title:"Notice: Annual General Meeting",type:"Notice",
+  passage:"Greenfield Holdings Ltd. hereby gives __1__ that the Annual General Meeting (AGM) will be held on Friday, June 20th, at 10:00 A.M. at the Parkview Hotel, Ballroom A. Shareholders __2__ to attend in person are asked to register by June 12th. Those unable to attend may submit a proxy form no __3__ than June 17th. The agenda includes the election of board members and __4__ of the annual financial statements. All registered shareholders will receive meeting materials by email one week before the event.",
+  translation:"グリーンフィールドホールディングスは6月20日（金）午前10時にパークビューホテルボールルームAにて年次株主総会（AGM）を開催することをお知らせします。直接参加する株主は6月12日までに登録してください。参加できない方は6月17日までに委任状を提出できます。議題には取締役選任と年次財務諸表の承認が含まれます。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["notice","information","announcement","warning"],answer:0,ev:"Greenfield Holdings Ltd. hereby gives __1__",exp:"「正式に通知を行う」→hereby gives notice（ここに通知する）が正解。法律・公式文書の定型表現。",syntax:"give notice = 通知する・予告する。hereby = ここに（公式文書用語）。",vocab:[{word:"notice",meaning:"通知・予告"},{word:"hereby",meaning:"ここに"},{word:"shareholder",meaning:"株主"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["wishing","required","expected","asked"],answer:0,ev:"Shareholders __2__ to attend in person",exp:"「直接参加を希望する株主」→wishing（希望する）が正解。those wishing to = ～を希望する人。",syntax:"shareholders wishing to ～ = ～を希望する株主。wishing to は形容詞句。",vocab:[{word:"wish",meaning:"望む・希望する"},{word:"in person",meaning:"直接・本人が"},{word:"register",meaning:"登録する"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["later","earlier","sooner","more"],answer:0,ev:"submit a proxy form no __3__ than June 17th",exp:"「6月17日より遅くない＝6月17日までに」→no later than = ～までに。",syntax:"no later than ～ = ～までに（期限表現）。by ～ と同義。",vocab:[{word:"no later than",meaning:"～までに"},{word:"proxy form",meaning:"委任状"},{word:"submit",meaning:"提出する"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["approval","review","preparation","distribution"],answer:0,ev:"the election of board members and __4__ of the annual financial statements",exp:"「年次財務諸表の承認」→approval（承認）が正解。",syntax:"approval of ～ = ～の承認。election of board members and approval of financial statements。",vocab:[{word:"approval",meaning:"承認"},{word:"financial statement",meaning:"財務諸表"},{word:"agenda",meaning:"議題"}]}
+  ]
+},
+{
+  title:"Advertisement: Coworking Space",type:"Advertisement",
+  passage:"Looking for a __1__, professional workspace in the heart of the city? WorkHub Downtown offers flexible membership plans to __2__ the needs of freelancers, startups, and remote workers alike. Our modern facilities include high-speed internet, fully equipped meeting rooms, and a rooftop lounge. Members __3__ enjoy 24/7 access to the building and free coffee throughout the day. Our community events help members __4__ with like-minded professionals. Visit workhub.com or drop by to __5__ your free one-day trial today.",
+  translation:"都市の中心部でフレキシブルでプロフェッショナルな作業スペースをお探しですか？ワークハブダウンタウンはフリーランサー、スタートアップ、リモートワーカー全員のニーズに対応する柔軟なメンバーシッププランを提供しています。最新の施設には高速インターネット、完全設備の会議室、屋上ラウンジが含まれます。会員は建物への24時間アクセスと一日中無料コーヒーを楽しめます。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["flexible","strict","limited","temporary"],answer:0,ev:"Looking for a __1__, professional workspace",exp:"「フレキシブルでプロフェッショナルな作業スペース」→flexible（柔軟な）が正解。",syntax:"flexible workspace = 柔軟な作業スペース。フレキシブルはコワーキングの文脈で頻出。",vocab:[{word:"flexible",meaning:"柔軟な"},{word:"workspace",meaning:"作業スペース"},{word:"professional",meaning:"プロフェッショナルな"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["meet","support","create","serve"],answer:0,ev:"membership plans to __2__ the needs of freelancers",exp:"「フリーランサーのニーズを満たすプラン」→meet（満たす）が正解。",syntax:"meet the needs of ～ = ～のニーズを満たす。meet = 満たす（needs / requirementsと共に使う）。",vocab:[{word:"meet",meaning:"（要求・ニーズを）満たす"},{word:"freelancer",meaning:"フリーランサー"},{word:"startup",meaning:"スタートアップ"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["also","only","never","rarely"],answer:0,ev:"Members __3__ enjoy 24/7 access to the building",exp:"「会員は加えて24時間アクセスを楽しめる」→also（また・加えて）が正解。",syntax:"also = また・加えて。Members also enjoy ～ = 会員はまた～も楽しめる。",vocab:[{word:"also",meaning:"また・さらに"},{word:"24/7",meaning:"24時間365日"},{word:"access",meaning:"アクセス"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["connect","compete","compare","contact"],answer:0,ev:"community events help members __4__ with like-minded professionals",exp:"「同じ志を持つプロフェッショナルとつながる」→connect（つながる）が正解。",syntax:"connect with ～ = ～とつながる。connect with like-minded people = 同じ志の人とつながる。",vocab:[{word:"connect",meaning:"つながる"},{word:"like-minded",meaning:"同じ志の"},{word:"community",meaning:"コミュニティ"}]}
+  ]
+},
+{
+  title:"Email: Conference Sponsorship",type:"Email",
+  passage:"Dear Ms. Garcia,\n\nWe are reaching out to __1__ your organization's interest in sponsoring the upcoming Global Tech Forum, scheduled for March 14–16. This three-day event is __2__ to attract over 2,000 attendees from the technology sector. As a platinum sponsor, your company would receive prominent __3__ in all promotional materials, priority exhibition space, and four complimentary conference passes. We believe this partnership would __4__ your brand to a highly targeted professional audience. Please find our sponsorship prospectus attached for your review.\n\nBest regards,\nEvents Team",
+  translation:"ガルシア様、3月14日〜16日に予定されているグローバルテックフォーラムへのスポンサーシップへの関心を伺うためにご連絡しています。この3日間のイベントはテクノロジー分野から2,000人以上の参加者を集める見込みです。プラチナスポンサーとして、全プロモーション資料への掲載、優先的な展示スペース、4枚の招待パスを受け取ります。このパートナーシップにより、高度にターゲット化されたプロフェッショナルな聴衆に御社ブランドを露出できると考えています。",
+  questions:[
+    {q:"__1__",text:"Which word best fills blank 1?",choices:["explore","ignore","reject","confirm"],answer:0,ev:"reaching out to __1__ your organization's interest",exp:"「関心を探る・打診する」→explore（探る）が正解。explore interest = 関心を確認する。",syntax:"explore interest = 関心を探る・打診する。reach out to do = ～するために連絡する。",vocab:[{word:"explore",meaning:"探る・検討する"},{word:"sponsorship",meaning:"スポンサーシップ"},{word:"reach out",meaning:"連絡する"}]},
+    {q:"__2__",text:"Which word best fills blank 2?",choices:["expected","required","forced","designed"],answer:0,ev:"This three-day event is __2__ to attract over 2,000 attendees",exp:"「2,000人以上を集めることが期待される」→expected to（～する見込み）。",syntax:"be expected to do = ～すると予想される。is expected to attract ～。",vocab:[{word:"expected",meaning:"期待される・見込みの"},{word:"attract",meaning:"集める・引きつける"},{word:"attendee",meaning:"参加者"}]},
+    {q:"__3__",text:"Which word best fills blank 3?",choices:["placement","involvement","participation","recognition"],answer:0,ev:"prominent __3__ in all promotional materials",exp:"「全プロモーション資料での目立つ掲載」→placement（掲載・配置）が正解。",syntax:"prominent placement = 目立つ場所への掲載・配置。promotional materials = プロモーション資料。",vocab:[{word:"placement",meaning:"掲載・配置"},{word:"prominent",meaning:"目立つ・著名な"},{word:"promotional",meaning:"プロモーションの"}]},
+    {q:"__4__",text:"Which word best fills blank 4?",choices:["expose","expand","introduce","promote"],answer:0,ev:"this partnership would __4__ your brand to a highly targeted professional audience",exp:"「ブランドをターゲット層に露出する」→expose（露出させる）が正解。",syntax:"expose A to B = AをBに露出させる。brand exposure = ブランド露出。",vocab:[{word:"expose",meaning:"露出させる・さらす"},{word:"targeted",meaning:"ターゲットを絞った"},{word:"audience",meaning:"聴衆"}]}
+  ]
+}
+];
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let paceMode = 'calm';
+const PACE = {
+  p5: { calm: 20, intense: 10 },
+  p6: { calm: 30, intense: 15 }
+};
+
+// Part 5
+let p5Order = [], p5Idx = 0, p5Results = [], p5Attempt = -1;
+let p5Choice = null, p5Answered = false;
+let p5TimerInt = null, p5TimeLeft = 0, p5SessId = 0, p5TimeoutId = null;
+
+// Part 6
+let p6Order = [], p6Idx = 0, p6Results = [], p6Attempt = -1;
+let p6Answers = {}, p6Submitted = false, p6Trans = false;
+let p6TimerInt = null, p6TimeLeft = 0, p6SessId = 0, p6TimeoutId = null;
+let p6ActiveQ = null;
+
+let globalSessId = 0;
+
+// ══════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════
+function shuffle(a) {
+  const b=[...a];
+  for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}
+  return b;
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+function getRecords() {
+  try{return JSON.parse(localStorage.getItem('toeic_p56_v1'))||[];}catch(e){return[];}
+}
+function saveRecord(r) {
+  try{const rs=getRecords();rs.push(r);localStorage.setItem('toeic_p56_v1',JSON.stringify(rs));}catch(e){}
+}
+function clearRecords() {
+  if(!confirm('すべての学習記録を削除しますか？'))return;
+  localStorage.removeItem('toeic_p56_v1');
+  renderRecords();
+  showToast('記録を削除しました');
+}
+function getNextAttempt() {
+  const rs=getRecords();
+  if(!rs.length)return 1;
+  return Math.max(...rs.map(r=>r.attempt||0))+1;
+}
+function renderRecords() {
+  const wrap=document.getElementById('recWrap');
+  const rs=getRecords().slice().reverse().slice(0,20);
+  if(!rs.length){wrap.innerHTML='<div class="empty-rec">まだ記録がありません。練習を開始しましょう！</div>';return;}
+  const rows=rs.map(r=>{
+    const pct=Math.round(r.correct/r.total*100);
+    const cls=pct>=80?'high':pct>=60?'mid':'low';
+    const partBadge=r.part==='p6'
+      ?`<span style="background:var(--p6-light);color:var(--p6);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">📝 Part 6</span>`
+      :`<span style="background:var(--p5-light);color:var(--p5);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">✏️ Part 5</span>`;
+    const paceBadge=r.pace==='intense'
+      ?`<span style="background:#fff1f2;color:#dc2626;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:3px;">🔥 本気</span>`
+      :`<span style="background:#eff6ff;color:#2563eb;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:3px;">🌿 ゆったり</span>`;
+    return `<tr><td>${partBadge}${paceBadge}</td><td><span style="background:var(--p5-light);color:var(--p5);font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;">第${r.attempt||'?'}回</span></td><td style="font-size:11px;color:var(--text2);">${r.date||''}</td><td>${r.total||0}問</td><td>${r.correct||0}問</td><td><span class="score-pill ${cls}">${pct}%</span></td></tr>`;
+  }).join('');
+  wrap.innerHTML=`<table class="rec-table"><thead><tr><th>モード</th><th>回</th><th>日時</th><th>問題数</th><th>正解数</th><th>正解率</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+// ══════════════════════════════════════
+// PACE
+// ══════════════════════════════════════
+function setPace(mode) {
+  paceMode=mode;
+  document.getElementById('paceBtnCalm').className='pace-btn'+(mode==='calm'?' calm':'');
+  document.getElementById('paceBtnIntense').className='pace-btn'+(mode==='intense'?' intense':'');
+  document.getElementById('paceDesc').innerHTML=mode==='calm'
+    ?'Part 5：20秒／問　Part 6：30秒／問。じっくり考える練習に。'
+    :'⚡ Part 5：<strong>10秒</strong>／問　Part 6：<strong>15秒</strong>／問。本番スピードで！';
+  document.getElementById('p5TimeLabel').textContent=mode==='calm'?'⏱ ゆったり 20秒／問':'⏱ 本気 10秒／問';
+  document.getElementById('p6TimeLabel').textContent=mode==='calm'?'⏱ ゆったり 30秒／問':'⏱ 本気 15秒／問';
+}
+
+// ══════════════════════════════════════
+// HOME
+// ══════════════════════════════════════
+function goHome() {
+  globalSessId++;p5SessId=globalSessId;p6SessId=globalSessId;
+  [p5TimerInt,p5TimeoutId,p6TimerInt,p6TimeoutId].forEach(t=>{if(t)clearTimeout(t);});
+  p5Attempt=-1;p6Attempt=-1;
+  showScreen('homeScreen');renderRecords();
+}
+
+// ══════════════════════════════════════
+// PART 5
+// ══════════════════════════════════════
+function startP5() {
+  globalSessId++;p5SessId=globalSessId;
+  [p5TimerInt,p5TimeoutId,p6TimerInt,p6TimeoutId].forEach(t=>{if(t)clearTimeout(t);});
+  p5Order=shuffle([...Array(P5Q.length).keys()]);
+  p5Idx=0;p5Results=[];p5Attempt=getNextAttempt();
+  const badge=document.getElementById('p5PaceBadge');
+  if(badge){badge.textContent=paceMode==='calm'?'🌿 ゆったり':'🔥 本気';badge.className='pace-badge '+(paceMode==='calm'?'calm':'intense');}
+  showScreen('p5Screen');
+  p5LoadQ();
+}
+
+function p5LoadQ() {
+  p5Answered=false;p5Choice=null;
+  if(p5TimerInt)clearTimeout(p5TimerInt);
+  document.getElementById('p5TimeoutBanner').classList.remove('show');
+  const q=P5Q[p5Order[p5Idx]];
+  const total=P5Q.length;
+  document.getElementById('p5QNum').textContent=`Q${p5Idx+1}/${total}`;
+  document.getElementById('p5Prog').style.width=`${((p5Idx+1)/total*100).toFixed(1)}%`;
+  // カテゴリバッジ
+  const cb=document.getElementById('p5CatBadge');
+  const catClass={pos:'pos',vocab:'vocab',grammar:'grammar'}[q.cat]||'pos';
+  const catLabel={pos:'品詞識別',vocab:'語彙',grammar:'文法'}[q.cat]||q.cat;
+  cb.textContent=catLabel;cb.className='cat-badge '+catClass;
+  document.getElementById('p5TypeLabel').textContent=q.type;
+  // 問題文（空欄を___で表示）
+  const sentEl=document.getElementById('p5Sentence');
+  const parts=q.sentence.split('_____');
+  sentEl.innerHTML='';
+  parts.forEach((part,i)=>{
+    sentEl.appendChild(document.createTextNode(part));
+    if(i<parts.length-1){
+      const span=document.createElement('span');
+      span.className='p5-blank';span.textContent='　　　　　';
+      sentEl.appendChild(span);
+    }
+  });
+  // 選択肢
+  const cl=document.getElementById('p5Choices');
+  cl.innerHTML='';
+  const labels=['A','B','C','D'];
+  q.choices.forEach((c,i)=>{
+    const btn=document.createElement('button');
+    btn.type='button';btn.className='p5-choice';
+    btn.innerHTML=`<span class="p5-clabel">${labels[i]}</span> ${c}`;
+    btn.addEventListener('click',()=>p5SelectChoice(btn,i));
+    cl.appendChild(btn);
+  });
+  document.getElementById('p5SubmitBtn').disabled=true;
+  p5StartTimer();
+}
+
+function p5StartTimer() {
+  if(p5TimerInt)clearTimeout(p5TimerInt);
+  p5TimeLeft=PACE.p5[paceMode];
+  const myId=p5SessId;
+  function tick(){
+    if(p5SessId!==myId)return;
+    p5TimeLeft--;
+    p5UpdateTimer();
+    if(p5TimeLeft<=0){p5Timeout();}
+    else{p5TimerInt=setTimeout(tick,1000);}
+  }
+  p5UpdateTimer();
+  p5TimerInt=setTimeout(tick,1000);
+}
+function p5UpdateTimer(){
+  const el=document.getElementById('p5Timer');
+  el.textContent=`⏱ ${p5TimeLeft}s`;
+  const warn=paceMode==='intense'?4:8;
+  el.classList.toggle('warning',p5TimeLeft<=warn&&p5TimeLeft>0);
+}
+function p5Timeout(){
+  if(!document.getElementById('p5Screen').classList.contains('active'))return;
+  if(p5Answered)return;
+  p5Answered=true;
+  document.getElementById('p5TimeoutBanner').classList.add('show');
+  const q=P5Q[p5Order[p5Idx]];
+  document.querySelectorAll('.p5-choice').forEach((btn,i)=>{btn.disabled=true;if(i===q.answer)btn.classList.add('correct');});
+  document.getElementById('p5SubmitBtn').disabled=true;
+  p5Results.push({correct:false,timedOut:true});
+  const _sid=p5SessId;
+  p5TimeoutId=setTimeout(()=>{if(p5SessId!==_sid)return;p5ShowExplain(false,true);},2200);
+}
+
+function p5SelectChoice(btn,idx){
+  if(p5Answered)return;
+  document.querySelectorAll('.p5-choice').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');p5Choice=idx;
+  document.getElementById('p5SubmitBtn').disabled=false;
+}
+
+function submitP5(){
+  if(p5Answered)return;
+  p5Answered=true;
+  if(p5TimerInt)clearTimeout(p5TimerInt);
+  const q=P5Q[p5Order[p5Idx]];
+  const isCorrect=(p5Choice===q.answer);
+  document.querySelectorAll('.p5-choice').forEach((btn,i)=>{
+    btn.disabled=true;
+    if(i===p5Choice&&i===q.answer)btn.classList.add('correct');
+    else if(i===p5Choice)btn.classList.add('incorrect');
+    else if(i===q.answer)btn.classList.add('correct');
+  });
+  // 空欄に正解を表示
+  const blank=document.querySelector('.p5-blank');
+  if(blank){blank.textContent=q.choices[q.answer];blank.style.color=isCorrect?'var(--green)':'var(--red)';}
+  p5Results.push({correct:isCorrect});
+  const _sid=p5SessId;
+  p5TimeoutId=setTimeout(()=>{if(p5SessId!==_sid)return;p5ShowExplain(isCorrect,false);},800);
+}
+
+function p5ShowExplain(isCorrect,timedOut){
+  const q=P5Q[p5Order[p5Idx]];
+  const labels=['A','B','C','D'];
+  showScreen('p5Explain');
+  document.getElementById('p5ExpTitle').textContent=`解説 — Q${p5Idx+1} / ${P5Q.length}`;
+  const isLast=p5Idx>=P5Q.length-1;
+  const nextLabel=isLast?'📊 結果を見る':`次の問題へ → Q${p5Idx+2}`;
+  // 問題文を正解ハイライト付きで再表示
+  const sentHL=q.sentence.replace('_____',`<span class="answer-highlight">${q.choices[q.answer]}</span>`);
+  const vocabHTML=q.vocab.map(v=>`<div class="vocab-item"><div class="word">${v.word}</div><div class="meaning">${v.meaning}</div></div>`).join('');
+  const choicesHTML=q.choices.map((c,i)=>{
+    const style=i===q.answer?'color:var(--green);font-weight:700;':'color:var(--text2);';
+    const mark=i===q.answer?' ✅':(p5Choice===i&&!timedOut?' ❌':'');
+    return `<div style="${style}">${labels[i]}. ${c}${mark}</div>`;
+  }).join('');
+
+  document.getElementById('p5ExpBody').innerHTML=`
+    <div class="result-banner ${isCorrect?'correct':'incorrect'}">
+      <div class="rb-icon">${isCorrect?'✅':timedOut?'⏰':'❌'}</div>
+      <div><h3>${isCorrect?'正解！':timedOut?'時間切れ':'不正解'}</h3><p>正解: (${labels[q.answer]}) ${q.choices[q.answer]}</p></div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-card-hdr">📝 問題文（正解入り）</div>
+      <div class="exp-card-body"><div class="sentence-replay">${sentHL}</div></div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-card-hdr">🔍 解説</div>
+      <div class="exp-card-body">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:2;">${choicesHTML}</div>
+        <div class="point-box">📌 ${q.explanation}</div>
+        <div class="syntax-title">🔑 Key Syntax</div>
+        <div class="syntax-note">${q.syntax}</div>
+        <div class="syntax-title" style="margin-top:12px">📚 重要語句</div>
+        <div class="vocab-grid">${vocabHTML}</div>
+      </div>
+    </div>
+    <div id="p5NextWrap"></div>`;
+
+  const nextBtn=document.createElement('button');
+  nextBtn.type='button';nextBtn.className='next-btn p5';nextBtn.textContent=nextLabel;
+  nextBtn.addEventListener('click',()=>p5Next());
+  document.getElementById('p5NextWrap').appendChild(nextBtn);
+}
+
+function p5Next(){
+  p5Idx++;
+  if(p5Idx>=P5Q.length){p5ShowResults();}
+  else{showScreen('p5Screen');p5LoadQ();}
+}
+
+function p5ShowResults(){
+  if(p5TimerInt)clearTimeout(p5TimerInt);
+  if(p5Attempt<0)return;
+  showScreen('p5Results');
+  const total=p5Results.length;
+  const correct=p5Results.filter(r=>r.correct).length;
+  const pct=Math.round(correct/total*100);
+  document.getElementById('p5ScoreNum').textContent=pct+'%';
+  document.getElementById('p5StCorrect').textContent=correct;
+  document.getElementById('p5StWrong').textContent=total-correct;
+  document.getElementById('p5StTotal').textContent=total;
+  document.getElementById('p5Arc').style.strokeDashoffset=301.6-(301.6*pct/100);
+  let title='お疲れさまでした！',sub='';
+  if(pct>=90){title='素晴らしい！🎉';sub='Part 5 マスターレベルです！';}
+  else if(pct>=70){title='よくできました！👏';sub='もう一息でパーフェクト！';}
+  else if(pct>=50){sub='品詞識別・語彙を復習してみましょう。';}
+  else{title='まだまだ伸びしろあり！';sub='解説をじっくり読んで再挑戦！';}
+  document.getElementById('p5ResTitle').textContent=title;
+  document.getElementById('p5ResSub').textContent=sub;
+  const now=new Date();
+  const dateStr=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  saveRecord({part:'p5',pace:paceMode,attempt:p5Attempt,date:dateStr,total,correct});
+  p5Attempt=-1;
+}
+
+function saveP5Progress(){
+  if(p5Attempt<0||p5Results.length===0){showToast('まだ解答がありません');return;}
+  const total=p5Results.length,correct=p5Results.filter(r=>r.correct).length;
+  const now=new Date();
+  const dateStr=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  saveRecord({part:'p5',pace:paceMode,attempt:p5Attempt,date:dateStr,total,correct});
+  showToast(`💾 保存しました！（${total}問中${correct}問正解）`);
+}
+
+// ══════════════════════════════════════
+// PART 6
+// ══════════════════════════════════════
+function startP6() {
+  globalSessId++;p6SessId=globalSessId;
+  [p5TimerInt,p5TimeoutId,p6TimerInt,p6TimeoutId].forEach(t=>{if(t)clearTimeout(t);});
+  p6Order=shuffle([...Array(P6S.length).keys()]);
+  p6Idx=0;p6Results=[];p6Attempt=getNextAttempt();
+  const badge=document.getElementById('p6PaceBadge');
+  if(badge){badge.textContent=paceMode==='calm'?'🌿 ゆったり':'🔥 本気';badge.className='pace-badge '+(paceMode==='calm'?'calm':'intense');}
+  showScreen('p6Screen');
+  p6LoadSet();
+}
+
+function p6LoadSet() {
+  p6Submitted=false;p6Answers={};p6Trans=false;p6ActiveQ=null;
+  if(p6TimerInt)clearTimeout(p6TimerInt);
+  const set=P6S[p6Order[p6Idx]];
+  const setNum=p6Idx+1,totalSets=P6S.length;
+  document.getElementById('p6SetNum').textContent=`セット ${setNum}/${totalSets}`;
+  document.getElementById('p6Prog').style.width=`${(setNum/totalSets*100).toFixed(1)}%`;
+
+  const body=document.getElementById('p6Body');
+  body.innerHTML='';
+
+  // 左パネル — パッセージ
+  const pp=document.createElement('div');
+  pp.className='p6-passage-panel';
+  const pph=document.createElement('div');
+  pph.className='p6-panel-hdr';
+  pph.innerHTML=`<h3>Passage — ${set.type}</h3><span style="font-size:10px;color:var(--p6);">${set.title}</span>`;
+  const ppb=document.createElement('div');
+  ppb.className='p6-passage-body';
+  ppb.id='p6PassBody';
+  p6RenderPassage(ppb,set);
+  const transBox=document.createElement('div');
+  transBox.className='p6-trans-box';transBox.id='p6TransBox';
+  transBox.innerHTML=`<strong>🇯🇵 日本語訳</strong>${set.translation.replace(/\n/g,'<br>')}`;
+  pp.appendChild(pph);pp.appendChild(ppb);pp.appendChild(transBox);
+  body.appendChild(pp);
+
+  // 右パネル — 問題群
+  const qp=document.createElement('div');
+  qp.className='p6-q-panel';qp.id='p6QPanel';
+
+  const transBtn=document.createElement('button');
+  transBtn.type='button';transBtn.className='p6-trans-btn';
+  transBtn.textContent='🇯🇵 日本語訳を表示 / 非表示';
+  transBtn.addEventListener('click',()=>{p6Trans=!p6Trans;transBox.classList.toggle('visible',p6Trans);});
+  qp.appendChild(transBtn);
+
+  const timeoutBanner=document.createElement('div');
+  timeoutBanner.className='p6-timeout-banner';timeoutBanner.id='p6TimeoutBanner';
+  timeoutBanner.textContent='⏰ 時間切れ！正解を確認してください。';
+  qp.appendChild(timeoutBanner);
+
+  const labels=['A','B','C','D'];
+  set.questions.forEach((q,qi)=>{
+    const card=document.createElement('div');
+    card.className='p6-qcard';
+    const hdr=document.createElement('div');
+    hdr.className='p6-qcard-hdr';
+    hdr.innerHTML=`<span class="p6-qnum">問 ${qi+1}　${q.q}</span><span class="p6-ans-mark" id="p6Mark${qi}"></span>`;
+    const bd=document.createElement('div');
+    bd.className='p6-qcard-body';
+    const qt=document.createElement('div');
+    qt.className='p6-qtext';qt.textContent=q.text;
+    qt.style.cursor='pointer';
+    qt.addEventListener('click',()=>p6SetActive(qi));
+    bd.appendChild(qt);
+    const ch=document.createElement('div');
+    ch.className='p6-choices';
+    q.choices.forEach((ct,ci)=>{
+      const btn=document.createElement('button');
+      btn.type='button';btn.className='p6-choice';btn.id=`p6C${qi}_${ci}`;
+      const lbl=document.createElement('span');
+      lbl.className='p6-clabel';lbl.textContent=labels[ci];
+      btn.appendChild(lbl);btn.appendChild(document.createTextNode(' '+ct));
+      btn.addEventListener('click',()=>{p6SetActive(qi);p6SelectChoice(qi,ci);});
+      ch.appendChild(btn);
+    });
+    bd.appendChild(ch);card.appendChild(hdr);card.appendChild(bd);
+    qp.appendChild(card);
+  });
+
+  const submitBtn=document.createElement('button');
+  submitBtn.type='button';submitBtn.className='p6-submit-btn';submitBtn.id='p6SubmitBtn';
+  submitBtn.disabled=true;
+  submitBtn.textContent=`✅ このセットを提出する (0/${set.questions.length}問回答済み)`;
+  submitBtn.addEventListener('click',()=>p6Submit(false));
+  qp.appendChild(submitBtn);
+  body.appendChild(qp);
+
+  // タイマー：最初の問題から開始（per-question）
+  p6ActiveQ=0;p6SetActive(0);
+  p6StartTimer();
+}
+
+function p6RenderPassage(container,set) {
+  const lines=set.passage.split('\n');
+  lines.forEach((line,li)=>{
+    const parts=line.split(/(__\d+__)/g);
+    parts.forEach(part=>{
+      const m=part.match(/^(__(\d+)__)$/);
+      if(m){
+        const qIdx=parseInt(m[2])-1;
+        const span=document.createElement('span');
+        span.className='p6-blank-marker';
+        span.id=`p6BM${qIdx}`;
+        span.textContent=m[1];
+        span.addEventListener('click',()=>p6SetActive(qIdx));
+        container.appendChild(span);
+      } else {
+        if(part)container.appendChild(document.createTextNode(part));
+      }
+    });
+    if(li<lines.length-1)container.appendChild(document.createElement('br'));
+  });
+}
+
+function p6SetActive(qi) {
+  p6ActiveQ=qi;
+  document.querySelectorAll('.p6-qcard').forEach((c,i)=>{
+    c.classList.toggle('active-q',i===qi);
+  });
+  document.querySelectorAll('.p6-blank-marker').forEach((m,i)=>{
+    if(!p6Submitted&&!p6Answers.hasOwnProperty(i)){
+      m.classList.toggle('active',i===qi);
+    }
+  });
+}
+
+function p6SelectChoice(qi,ci) {
+  if(p6Submitted)return;
+  for(let i=0;i<4;i++){const b=document.getElementById(`p6C${qi}_${ci-ci+i}`);if(b)b.classList.remove('sel');}
+  // 正しく全択を外す
+  const set=P6S[p6Order[p6Idx]];
+  set.questions[qi].choices.forEach((_,i)=>{
+    const b=document.getElementById(`p6C${qi}_${i}`);if(b)b.classList.remove('sel');
+  });
+  const chosen=document.getElementById(`p6C${qi}_${ci}`);
+  if(chosen)chosen.classList.add('sel');
+  p6Answers[qi]=ci;
+  const mark=document.getElementById(`p6Mark${qi}`);
+  if(mark){mark.textContent='✓ 回答済み';mark.style.display='inline';mark.style.color='var(--green)';}
+  const bm=document.getElementById(`p6BM${qi}`);
+  if(bm){bm.classList.remove('active');bm.classList.add('answered');}
+  p6UpdateSubmitBtn();
+  // 次の未回答の問題へ自動移動
+  const set2=P6S[p6Order[p6Idx]];
+  const nextUnanswered=set2.questions.findIndex((_,i)=>i>qi&&!p6Answers.hasOwnProperty(i));
+  if(nextUnanswered>=0)p6SetActive(nextUnanswered);
+}
+
+function p6UpdateSubmitBtn(){
+  const set=P6S[p6Order[p6Idx]];
+  const total=set.questions.length;
+  const answered=Object.keys(p6Answers).length;
+  const btn=document.getElementById('p6SubmitBtn');
+  if(btn){btn.textContent=`✅ このセットを提出する (${answered}/${total}問回答済み)`;btn.disabled=answered<total;}
+}
+
+function p6StartTimer(){
+  if(p6TimerInt)clearTimeout(p6TimerInt);
+  const set=P6S[p6Order[p6Idx]];
+  p6TimeLeft=PACE.p6[paceMode]*set.questions.length;
+  const myId=p6SessId;
+  function tick(){
+    if(p6SessId!==myId)return;
+    p6TimeLeft--;
+    p6UpdateTimer();
+    if(p6TimeLeft<=0){p6Timeout();}
+    else{p6TimerInt=setTimeout(tick,1000);}
+  }
+  p6UpdateTimer();
+  p6TimerInt=setTimeout(tick,1000);
+}
+function p6UpdateTimer(){
+  const el=document.getElementById('p6Timer');
+  if(!el)return;
+  const m=String(Math.floor(p6TimeLeft/60)).padStart(2,'0');
+  const s=String(p6TimeLeft%60).padStart(2,'0');
+  el.textContent=`⏱ ${m}:${s}`;
+  const warn=paceMode==='intense'?10:20;
+  el.classList.toggle('warning',p6TimeLeft<=warn&&p6TimeLeft>0);
+}
+function p6Timeout(){
+  if(!document.getElementById('p6Screen').classList.contains('active'))return;
+  if(p6Submitted)return;
+  const banner=document.getElementById('p6TimeoutBanner');
+  if(banner)banner.classList.add('show');
+  p6Submit(true);
+}
+
+function p6Submit(timedOut){
+  if(p6Submitted)return;
+  p6Submitted=true;
+  if(p6TimerInt)clearTimeout(p6TimerInt);
+  const set=P6S[p6Order[p6Idx]];
+  let setCorrect=0;
+  set.questions.forEach((q,qi)=>{
+    const sel=p6Answers[qi];
+    const isCorrect=(sel===q.answer);
+    if(isCorrect)setCorrect++;
+    p6Results.push({correct:isCorrect});
+    for(let i=0;i<4;i++){
+      const btn=document.getElementById(`p6C${qi}_${i}`);
+      if(!btn)continue;
+      btn.disabled=true;
+      if(i===q.answer)btn.classList.add('ok');
+      else if(i===sel)btn.classList.add('ng');
+    }
+    const mark=document.getElementById(`p6Mark${qi}`);
+    if(mark){mark.textContent=isCorrect?'✅ 正解':'❌ 不正解';mark.style.color=isCorrect?'var(--green)':'var(--red)';mark.style.display='inline';}
+    const bm=document.getElementById(`p6BM${qi}`);
+    if(bm){bm.classList.remove('active','answered');bm.classList.add(isCorrect?'correct':'incorrect');}
+  });
+  const submitBtn=document.getElementById('p6SubmitBtn');
+  if(submitBtn)submitBtn.disabled=true;
+  const _sid=p6SessId;
+  p6TimeoutId=setTimeout(()=>{if(p6SessId!==_sid)return;p6ShowExplain(setCorrect,timedOut);},timedOut?2500:700);
+}
+
+function p6ShowExplain(setCorrect,timedOut){
+  const set=P6S[p6Order[p6Idx]];
+  const labels=['A','B','C','D'];
+  showScreen('p6Explain');
+  const setNum=p6Idx+1;
+  document.getElementById('p6ExpTitle').textContent=`解説 — セット ${setNum} / ${P6S.length}`;
+  const isLast=p6Idx>=P6S.length-1;
+  const nextLabel=isLast?'📊 結果を見る':`次のセットへ → セット ${setNum+1}`;
+
+  // パッセージの正解ハイライト再表示
+  let passageHL=set.passage;
+  set.questions.forEach((q,qi)=>{
+    const answer=q.choices[q.answer];
+    passageHL=passageHL.replace(q.q,`<span class="p6-ans-hl">${answer}</span>`);
+  });
+  passageHL=passageHL.replace(/\n/g,'<br>');
+
+  const questionsHTML=set.questions.map((q,qi)=>{
+    const sel=p6Answers[qi];
+    const isCorrect=(sel===q.answer);
+    const vocabHTML=q.vocab.map(v=>`<div class="vocab-item"><div class="word p6">${v.word}</div><div class="meaning">${v.meaning}</div></div>`).join('');
+    const choicesHTML=q.choices.map((c,ci)=>{
+      const style=ci===q.answer?'color:var(--green);font-weight:700;':'color:var(--text2);';
+      const mark=ci===q.answer?' ✅':(sel===ci&&!timedOut?' ❌':'');
+      return `<div style="${style}">${labels[ci]}. ${c}${mark}</div>`;
+    }).join('');
+    return `<div class="exp-card">
+      <div class="exp-card-hdr" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>問${qi+1}　${q.q}</span>
+        <span style="font-size:11px;${isCorrect?'color:var(--green)':'color:var(--red)'}">${isCorrect?'✅ 正解':'❌ 不正解'}</span>
+      </div>
+      <div class="exp-card-body">
+        <div style="font-size:12px;font-weight:500;margin-bottom:8px;">${q.text}</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:2;">${choicesHTML}</div>
+        <div class="point-box p6">📌 ${q.exp}</div>
+        <div class="syntax-title p6">🔑 Key Syntax</div>
+        <div class="syntax-note p6">${q.syntax}</div>
+        <div class="syntax-title p6" style="margin-top:10px;">📚 重要語句</div>
+        <div class="vocab-grid">${vocabHTML}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('p6ExpBody').innerHTML=`
+    <div class="p6-set-hdr">
+      <h3>📝 Part 6 — ${set.title}</h3>
+      <p>このセットの正解数: ${setCorrect} / ${set.questions.length}問</p>
+    </div>
+    <div class="p6-score-row">
+      <div class="stat-box correct"><div class="sv">${setCorrect}</div><div class="sl">正解</div></div>
+      <div class="stat-box wrong"><div class="sv">${set.questions.length-setCorrect}</div><div class="sl">不正解</div></div>
+      <div class="stat-box"><div class="sv">${Math.round(setCorrect/set.questions.length*100)}%</div><div class="sl">正解率</div></div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-card-hdr">📄 パッセージ（正解入り）</div>
+      <div class="exp-card-body"><div class="p6-passage-replay"><div class="rp-title">${set.type} — ${set.title}</div>${passageHL}</div></div>
+    </div>
+    ${questionsHTML}
+    <div id="p6NextWrap"></div>`;
+
+  const nextBtn=document.createElement('button');
+  nextBtn.type='button';nextBtn.className='next-btn p6';nextBtn.textContent=nextLabel;
+  nextBtn.addEventListener('click',()=>p6Next());
+  document.getElementById('p6NextWrap').appendChild(nextBtn);
+}
+
+function p6Next(){
+  p6Idx++;
+  if(p6Idx>=P6S.length){p6ShowResults();}
+  else{showScreen('p6Screen');p6LoadSet();}
+}
+
+function p6ShowResults(){
+  if(p6TimerInt)clearTimeout(p6TimerInt);
+  if(p6Attempt<0)return;
+  showScreen('p6Results');
+  const total=p6Results.length;
+  const correct=p6Results.filter(r=>r.correct).length;
+  const pct=Math.round(correct/total*100);
+  document.getElementById('p6ScoreNum').textContent=pct+'%';
+  document.getElementById('p6StCorrect').textContent=correct;
+  document.getElementById('p6StWrong').textContent=total-correct;
+  document.getElementById('p6StTotal').textContent=total;
+  document.getElementById('p6Arc').style.strokeDashoffset=301.6-(301.6*pct/100);
+  let title='お疲れさまでした！',sub='';
+  if(pct>=90){title='素晴らしい！🎉';sub='Part 6 完璧です！';}
+  else if(pct>=70){title='よくできました！👏';sub='文脈読解が上手くなっています！';}
+  else if(pct>=50){sub='パッセージ全体の流れを意識して復習しましょう。';}
+  else{title='まだまだ伸びしろあり！';sub='文脈ヒントを意識しながら再挑戦！';}
+  document.getElementById('p6ResTitle').textContent=title;
+  document.getElementById('p6ResSub').textContent=sub;
+
+  const now=new Date();
+  const dateStr=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  saveRecord({part:'p6',pace:paceMode,attempt:p6Attempt,date:dateStr,total,correct});
+  p6Attempt=-1;
+}
+
+function saveP6Progress(){
+  if(p6Attempt<0||p6Results.length===0){showToast('まだ解答がありません');return;}
+  const total=p6Results.length,correct=p6Results.filter(r=>r.correct).length;
+  const now=new Date();
+  const dateStr=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  saveRecord({part:'p6',pace:paceMode,attempt:p6Attempt,date:dateStr,total,correct});
+  showToast(`💾 保存しました！（${total}問中${correct}問正解）`);
+}
+
+// ── INIT ──
+renderRecords();
+</script>
+</body>
+</html>
